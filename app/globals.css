@@ -5,75 +5,75 @@
 
 :root {
   /* NASA Mission Control Theme - Space-inspired color palette */
-  --background: oklch(0.965 0.004 247.858); /* #f3f4f6 Light Gray */
-  --foreground: oklch(0.278 0.015 255.395); /* #1f2937 Dark Gray */
-  --card: oklch(1 0 0 / 0.8); /* Semi-transparent white for glass effect */
-  --card-foreground: oklch(0 0 0); /* #000000 Black */
-  --popover: oklch(1 0 0); /* #ffffff White */
-  --popover-foreground: oklch(0.278 0.015 255.395); /* #1f2937 Dark Gray */
-  --primary: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
-  --primary-foreground: oklch(1 0 0); /* #ffffff White */
-  --secondary: oklch(0.85 0.12 85.87); /* #ffcc00 NASA Gold */
-  --secondary-foreground: oklch(0 0 0); /* #000000 Black */
-  --muted: oklch(0.965 0.004 247.858); /* #f3f4f6 Muted background */
-  --muted-foreground: oklch(0.478 0.015 255.395); /* #4b5563 Muted text */
-  --accent: oklch(0.85 0.12 85.87); /* #ffcc00 NASA Gold */
-  --accent-foreground: oklch(0 0 0); /* #000000 Black */
-  --destructive: oklch(0.548 0.227 27.33); /* #e53e3e Red */
-  --destructive-foreground: oklch(1 0 0); /* #ffffff White */
-  --border: oklch(0.922 0.013 247.858); /* #e5e7eb Light border */
-  --input: oklch(1 0 0); /* #ffffff White */
-  --ring: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
-  --chart-1: oklch(0.6 0.15 270); /* #6366f1 Space Purple */
-  --chart-2: oklch(0.7 0.15 140); /* #4ade80 Space Green */
-  --chart-3: oklch(0.75 0.12 85.87); /* #fbbf24 Space Yellow */
-  --chart-4: oklch(0.7 0.15 25); /* #fca5a1 Space Coral */
-  --chart-5: oklch(0.75 0.1 270); /* #a5b4fc Light Space Purple */
-  --radius: 0.5rem;
-  --sidebar: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
-  --sidebar-foreground: oklch(1 0 0); /* #ffffff White */
-  --sidebar-primary: oklch(0.85 0.12 85.87); /* #ffcc00 NASA Gold */
-  --sidebar-primary-foreground: oklch(0 0 0); /* #000000 Black */
-  --sidebar-accent: oklch(0.6 0.15 270); /* #6366f1 Space Purple */
-  --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff White */
-  --sidebar-border: oklch(0.922 0.013 247.858); /* #e5e7eb */
-  --sidebar-ring: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
   /* Dark mode - Deep space theme */
-  --background: oklch(0.08 0.02 258.34); /* Deep space background */
-  --foreground: oklch(0.985 0 0); /* Bright white text */
-  --card: oklch(0.12 0.02 258.34 / 0.8); /* Semi-transparent dark cards */
-  --card-foreground: oklch(0.985 0 0); /* Bright white card text */
-  --popover: oklch(0.12 0.02 258.34); /* Dark popover */
-  --popover-foreground: oklch(0.985 0 0); /* Bright white popover text */
-  --primary: oklch(0.45 0.15 258.34); /* Lighter space blue for dark mode */
-  --primary-foreground: oklch(1 0 0); /* White text */
-  --secondary: oklch(0.85 0.12 85.87); /* Keep NASA Gold */
-  --secondary-foreground: oklch(0 0 0); /* Black text */
-  --muted: oklch(0.15 0.02 258.34); /* Muted dark background */
-  --muted-foreground: oklch(0.708 0 0); /* Muted light text */
-  --accent: oklch(0.85 0.12 85.87); /* NASA Gold accent */
-  --accent-foreground: oklch(0 0 0); /* Black accent text */
-  --destructive: oklch(0.65 0.227 27.33); /* Lighter red for dark mode */
-  --destructive-foreground: oklch(1 0 0); /* White text */
-  --border: oklch(0.2 0.02 258.34); /* Dark border */
-  --input: oklch(0.15 0.02 258.34); /* Dark input background */
-  --ring: oklch(0.45 0.15 258.34); /* Lighter space blue ring */
-  --chart-1: oklch(0.7 0.15 270); /* Brighter space purple */
-  --chart-2: oklch(0.8 0.15 140); /* Brighter space green */
-  --chart-3: oklch(0.85 0.12 85.87); /* NASA Gold */
-  --chart-4: oklch(0.8 0.15 25); /* Brighter space coral */
-  --chart-5: oklch(0.85 0.1 270); /* Brighter light space purple */
-  --sidebar: oklch(0.1 0.02 258.34); /* Dark sidebar */
-  --sidebar-foreground: oklch(0.985 0 0); /* Bright white sidebar text */
-  --sidebar-primary: oklch(0.85 0.12 85.87); /* NASA Gold */
-  --sidebar-primary-foreground: oklch(0 0 0); /* Black text */
-  --sidebar-accent: oklch(0.7 0.15 270); /* Brighter space purple */
-  --sidebar-accent-foreground: oklch(1 0 0); /* White text */
-  --sidebar-border: oklch(0.2 0.02 258.34); /* Dark border */
-  --sidebar-ring: oklch(0.45 0.15 258.34); /* Lighter space blue ring */
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
 }
 
 @theme inline {
