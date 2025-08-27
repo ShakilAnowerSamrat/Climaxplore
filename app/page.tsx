@@ -1,19 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import dynamic from "next/dynamic"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { LocationSearch } from "@/components/location-search"
 import { PreferencesDashboard } from "@/components/preferences-dashboard"
 import { ActivitySelector } from "@/components/activity-selector"
 import { WeatherResults } from "@/components/weather-results"
 import { ForecastDisplay } from "@/components/forecast-display"
-import { WeatherMap } from "@/components/weather-map"
 import { DataManagement } from "@/components/data-management"
-import { NASAMissionControl } from "@/components/nasa-mission-control"
-import { AdvancedWeatherAnalysis } from "@/components/advanced-weather-analysis"
-import { HistoricalWeatherData } from "@/components/historical-weather-data"
-import WeatherChatAssistant from "@/components/weather-chat-assistant"
-import AIInsightsPanel from "@/components/ai-insights-panel"
 import {
   getCurrentWeather,
   getForecast,
@@ -30,6 +25,69 @@ import {
   type EnhancedRiskAssessment,
 } from "@/lib/risk-assessment"
 import { dataPersistence } from "@/lib/data-persistence"
+
+const WeatherMap = dynamic(() => import("@/components/weather-map").then((mod) => ({ default: mod.WeatherMap })), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-96">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  ),
+})
+
+const NASAMissionControl = dynamic(
+  () => import("@/components/nasa-mission-control").then((mod) => ({ default: mod.NASAMissionControl })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    ),
+  },
+)
+
+const AdvancedWeatherAnalysis = dynamic(
+  () => import("@/components/advanced-weather-analysis").then((mod) => ({ default: mod.AdvancedWeatherAnalysis })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    ),
+  },
+)
+
+const HistoricalWeatherData = dynamic(
+  () => import("@/components/historical-weather-data").then((mod) => ({ default: mod.HistoricalWeatherData })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    ),
+  },
+)
+
+const WeatherChatAssistant = dynamic(() => import("@/components/weather-chat-assistant"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  ),
+})
+
+const AIInsightsPanel = dynamic(() => import("@/components/ai-insights-panel"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>
+  ),
+})
 
 const defaultPreferences: UserPreferences = {
   veryHot: 30,
@@ -54,8 +112,11 @@ export default function WeatherApp() {
   const [historicalData, setHistoricalData] = useState<any[]>([])
   const [weatherAnomalies, setWeatherAnomalies] = useState<any[]>([])
   const [missionControlMode, setMissionControlMode] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    setIsClient(true)
+
     const profile = dataPersistence.getUserProfile()
     if (profile.preferences) {
       setPreferences(profile.preferences)
@@ -63,6 +124,14 @@ export default function WeatherApp() {
       setSelectedActivity(activity)
     }
   }, [])
+
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
 
   const handleLocationSelect = async (lat: number, lon: number, name: string) => {
     console.log("[v0] handleLocationSelect called with:", { lat, lon, name })
