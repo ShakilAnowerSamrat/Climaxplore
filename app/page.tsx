@@ -65,6 +65,8 @@ export default function WeatherApp() {
   }, [])
 
   const handleLocationSelect = async (lat: number, lon: number, name: string) => {
+    console.log("[v0] handleLocationSelect called with:", { lat, lon, name })
+
     setLoading(true)
     setError("")
     setCurrentLocationName(name)
@@ -76,6 +78,7 @@ export default function WeatherApp() {
       let forecastData = dataPersistence.getCachedWeatherData(`${locationKey}-forecast`)
 
       if (!weatherData || !forecastData) {
+        console.log("[v0] Fetching fresh weather data for location:", { lat, lon, name })
         const [fetchedWeather, fetchedForecast] = await Promise.all([
           getCurrentWeather(lat, lon),
           getForecast(lat, lon),
@@ -86,6 +89,9 @@ export default function WeatherApp() {
 
         dataPersistence.cacheWeatherData(locationKey, weatherData)
         dataPersistence.cacheWeatherData(`${locationKey}-forecast`, forecastData)
+        console.log("[v0] Weather data fetched and cached successfully")
+      } else {
+        console.log("[v0] Using cached weather data for location:", name)
       }
 
       try {
@@ -106,9 +112,20 @@ export default function WeatherApp() {
       const risk = assessRisk(combinedWeatherData, preferences)
       const enhancedRisk = assessActivityRisk(combinedWeatherData, selectedActivity, preferences)
 
+      console.log("[v0] Updating weather state with:", {
+        location: name,
+        temp: weatherData.current.temp,
+        riskLevel: enhancedRisk.overall,
+      })
+
       setWeather(combinedWeatherData)
       setRiskAssessment(risk)
       setEnhancedRiskAssessment(enhancedRisk)
+
+      if (activeTab === "map") {
+        console.log("[v0] Switching to weather tab to show selected location data")
+        setActiveTab("weather")
+      }
 
       dataPersistence.addFavoriteLocation({ name, lat, lon })
       dataPersistence.addWeatherQuery({
@@ -123,9 +140,11 @@ export default function WeatherApp() {
           conditions: weatherData.current.weather[0]?.description || "Unknown",
         },
       })
+
+      console.log("[v0] Location selection completed successfully")
     } catch (err) {
+      console.error("[v0] Error in handleLocationSelect:", err)
       setError("Failed to fetch weather data")
-      console.error(err)
     } finally {
       setLoading(false)
     }

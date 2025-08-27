@@ -24,6 +24,7 @@ import {
 import { getCurrentWeather } from "@/lib/weather-api"
 import { assessActivityRisk, type ActivityType } from "@/lib/risk-assessment"
 import type { UserPreferences } from "@/lib/weather-api"
+import { WeatherMap3D } from "./weather-map-3d"
 
 interface WeatherMapProps {
   onLocationSelect: (lat: number, lon: number, name: string) => void
@@ -68,6 +69,7 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
     "temperature",
   )
   const [showCities, setShowCities] = useState(false)
+  const [is3DMode, setIs3DMode] = useState(false)
   const mapRef = useRef<HTMLDivElement>(null)
 
   // Initialize map with current location
@@ -271,6 +273,10 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
             >
               Clear All
             </Button>
+            <Button variant={is3DMode ? "default" : "outline"} size="sm" onClick={() => setIs3DMode(!is3DMode)}>
+              <Layers className="h-4 w-4 mr-2" />
+              {is3DMode ? "2D Map" : "3D Globe"}
+            </Button>
             <div className="flex items-center gap-2 ml-auto">
               <span className="text-sm text-muted-foreground">Weather Overlay:</span>
               <Tabs value={mapMode} onValueChange={(value) => setMapMode(value as any)} className="w-auto">
@@ -300,172 +306,182 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
       {/* Map Display */}
       <Card>
         <CardContent className="p-0">
-          <div
-            ref={mapRef}
-            className="relative w-full h-96 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-blue-950 dark:via-green-950 dark:to-blue-900 cursor-crosshair overflow-hidden rounded-lg"
-            onClick={handleMapClick}
-          >
-            <div className="absolute inset-0 opacity-10">
-              <svg width="100%" height="100%">
-                <defs>
-                  <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                  </pattern>
-                  <pattern id="majorGrid" width="120" height="120" patternUnits="userSpaceOnUse">
-                    <path d="M 120 0 L 0 0 0 120" fill="none" stroke="currentColor" strokeWidth="1" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-                <rect width="100%" height="100%" fill="url(#majorGrid)" />
-              </svg>
-            </div>
+          {is3DMode ? (
+            <WeatherMap3D
+              markers={markers}
+              onLocationSelect={onLocationSelect}
+              activity={activity}
+              preferences={preferences}
+              mapMode={mapMode}
+            />
+          ) : (
+            <div
+              ref={mapRef}
+              className="relative w-full h-96 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-blue-950 dark:via-green-950 dark:to-blue-900 cursor-crosshair overflow-hidden rounded-lg"
+              onClick={handleMapClick}
+            >
+              <div className="absolute inset-0 opacity-10">
+                <svg width="100%" height="100%">
+                  <defs>
+                    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                    </pattern>
+                    <pattern id="majorGrid" width="120" height="120" patternUnits="userSpaceOnUse">
+                      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="currentColor" strokeWidth="1" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+                  <rect width="100%" height="100%" fill="url(#majorGrid)" />
+                </svg>
+              </div>
 
-            <div className="absolute inset-0 pointer-events-none">
-              {markers.map((marker, index) => {
-                if (!marker.weather) return null
+              <div className="absolute inset-0 pointer-events-none">
+                {markers.map((marker, index) => {
+                  if (!marker.weather) return null
 
-                const value =
-                  mapMode === "temperature"
-                    ? marker.weather.current.temp
-                    : mapMode === "wind"
-                      ? marker.weather.current.wind_speed
-                      : mapMode === "precipitation"
-                        ? marker.weather.current.humidity
-                        : mapMode === "visibility"
-                          ? marker.weather.current.visibility || 10000
-                          : marker.weather.current.pressure || 1013
+                  const value =
+                    mapMode === "temperature"
+                      ? marker.weather.current.temp
+                      : mapMode === "wind"
+                        ? marker.weather.current.wind_speed
+                        : mapMode === "precipitation"
+                          ? marker.weather.current.humidity
+                          : mapMode === "visibility"
+                            ? marker.weather.current.visibility || 10000
+                            : marker.weather.current.pressure || 1013
 
-                return (
-                  <div
-                    key={`overlay-${index}`}
-                    className="absolute rounded-full animate-pulse"
-                    style={{
-                      left: `${50 + ((marker.lon - mapCenter.lon) / (zoom * 0.1)) * 50}%`,
-                      top: `${50 - ((marker.lat - mapCenter.lat) / (zoom * 0.1)) * 50}%`,
-                      width: "100px",
-                      height: "100px",
-                      backgroundColor: getWeatherOverlayColor(value, mapMode),
-                      transform: "translate(-50%, -50%)",
-                      border: "2px solid rgba(255,255,255,0.3)",
-                    }}
-                  />
-                )
-              })}
-            </div>
+                  return (
+                    <div
+                      key={`overlay-${index}`}
+                      className="absolute rounded-full animate-pulse"
+                      style={{
+                        left: `${50 + ((marker.lon - mapCenter.lon) / (zoom * 0.1)) * 50}%`,
+                        top: `${50 - ((marker.lat - mapCenter.lat) / (zoom * 0.1)) * 50}%`,
+                        width: "100px",
+                        height: "100px",
+                        backgroundColor: getWeatherOverlayColor(value, mapMode),
+                        transform: "translate(-50%, -50%)",
+                        border: "2px solid rgba(255,255,255,0.3)",
+                      }}
+                    />
+                  )
+                })}
+              </div>
 
-            {markers.map((marker, index) => (
-              <div
-                key={index}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 group"
-                style={{
-                  left: `${50 + ((marker.lon - mapCenter.lon) / (zoom * 0.1)) * 50}%`,
-                  top: `${50 - ((marker.lat - mapCenter.lat) / (zoom * 0.1)) * 50}%`,
-                }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleMarkerClick(marker)
-                }}
-              >
+              {markers.map((marker, index) => (
                 <div
-                  className="w-8 h-8 rounded-full border-3 border-white shadow-lg flex items-center justify-center transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: getRiskColor(marker.risk) }}
+                  key={index}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 group"
+                  style={{
+                    left: `${50 + ((marker.lon - mapCenter.lon) / (zoom * 0.1)) * 50}%`,
+                    top: `${50 - ((marker.lat - mapCenter.lat) / (zoom * 0.1)) * 50}%`,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleMarkerClick(marker)
+                  }}
                 >
-                  {marker.weather ? getWeatherIcon(marker.weather) : <MapPin className="h-4 w-4 text-white" />}
-                </div>
-
-                <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-black/75 text-white text-xs px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                  {marker.name}
-                  {marker.weather && <div className="text-center">{Math.round(marker.weather.current.temp)}°C</div>}
-                </div>
-
-                {selectedMarker === marker && (
-                  <div className="absolute top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card border rounded-lg p-4 shadow-xl min-w-64 z-20">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="text-sm font-semibold">{marker.name}</div>
-                      {marker.weather && getWeatherIcon(marker.weather)}
-                    </div>
-                    {marker.weather && (
-                      <div className="space-y-2 text-xs">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Temperature:</span>
-                            <span className="font-medium">{Math.round(marker.weather.current.temp)}°C</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Feels like:</span>
-                            <span className="font-medium">{Math.round(marker.weather.current.feels_like)}°C</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Wind:</span>
-                            <span className="font-medium">{marker.weather.current.wind_speed} m/s</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Humidity:</span>
-                            <span className="font-medium">{marker.weather.current.humidity}%</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Pressure:</span>
-                            <span className="font-medium">{marker.weather.current.pressure} hPa</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">UV Index:</span>
-                            <span className="font-medium">{marker.weather.current.uvi || "N/A"}</span>
-                          </div>
-                        </div>
-                        <div className="border-t pt-2 mt-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-muted-foreground">Activity Risk:</span>
-                            <Badge
-                              className="text-xs font-medium"
-                              style={{
-                                backgroundColor: getRiskColor(marker.risk),
-                                color: "white",
-                              }}
-                            >
-                              {marker.risk?.toUpperCase()}
-                            </Badge>
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {marker.weather.current.weather?.[0]?.description || "Weather conditions"}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                  <div
+                    className="w-8 h-8 rounded-full border-3 border-white shadow-lg flex items-center justify-center transition-transform group-hover:scale-110"
+                    style={{ backgroundColor: getRiskColor(marker.risk) }}
+                  >
+                    {marker.weather ? getWeatherIcon(marker.weather) : <MapPin className="h-4 w-4 text-white" />}
                   </div>
-                )}
-              </div>
-            ))}
 
-            {/* Center Crosshair */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-              <Crosshair className="h-6 w-6 text-muted-foreground opacity-30" />
-            </div>
+                  <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-black/75 text-white text-xs px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                    {marker.name}
+                    {marker.weather && <div className="text-center">{Math.round(marker.weather.current.temp)}°C</div>}
+                  </div>
 
-            {/* Loading Overlay */}
-            {loading && (
-              <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                  <div className="text-sm text-muted-foreground">Loading weather data...</div>
-                </div>
-              </div>
-            )}
-
-            {markers.length > 0 && (
-              <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm border rounded-lg p-3 text-xs">
-                <div className="font-medium mb-1">Map Statistics</div>
-                <div className="space-y-1 text-muted-foreground">
-                  <div>Locations: {markers.length}</div>
-                  <div>Active Overlay: {mapMode}</div>
-                  {markers.filter((m) => m.weather).length > 0 && (
-                    <div>
-                      Weather Data: {markers.filter((m) => m.weather).length}/{markers.length}
+                  {selectedMarker === marker && (
+                    <div className="absolute top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card border rounded-lg p-4 shadow-xl min-w-64 z-20">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="text-sm font-semibold">{marker.name}</div>
+                        {marker.weather && getWeatherIcon(marker.weather)}
+                      </div>
+                      {marker.weather && (
+                        <div className="space-y-2 text-xs">
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Temperature:</span>
+                              <span className="font-medium">{Math.round(marker.weather.current.temp)}°C</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Feels like:</span>
+                              <span className="font-medium">{Math.round(marker.weather.current.feels_like)}°C</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Wind:</span>
+                              <span className="font-medium">{marker.weather.current.wind_speed} m/s</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Humidity:</span>
+                              <span className="font-medium">{marker.weather.current.humidity}%</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Pressure:</span>
+                              <span className="font-medium">{marker.weather.current.pressure} hPa</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">UV Index:</span>
+                              <span className="font-medium">{marker.weather.current.uvi || "N/A"}</span>
+                            </div>
+                          </div>
+                          <div className="border-t pt-2 mt-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-muted-foreground">Activity Risk:</span>
+                              <Badge
+                                className="text-xs font-medium"
+                                style={{
+                                  backgroundColor: getRiskColor(marker.risk),
+                                  color: "white",
+                                }}
+                              >
+                                {marker.risk?.toUpperCase()}
+                              </Badge>
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {marker.weather.current.weather?.[0]?.description || "Weather conditions"}
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
+              ))}
+
+              {/* Center Crosshair */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                <Crosshair className="h-6 w-6 text-muted-foreground opacity-30" />
               </div>
-            )}
-          </div>
+
+              {/* Loading Overlay */}
+              {loading && (
+                <div className="absolute inset-0 bg-background/50 flex items-center justify-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <div className="text-sm text-muted-foreground">Loading weather data...</div>
+                  </div>
+                </div>
+              )}
+
+              {markers.length > 0 && (
+                <div className="absolute top-4 left-4 bg-card/90 backdrop-blur-sm border rounded-lg p-3 text-xs">
+                  <div className="font-medium mb-1">Map Statistics</div>
+                  <div className="space-y-1 text-muted-foreground">
+                    <div>Locations: {markers.length}</div>
+                    <div>Active Overlay: {mapMode}</div>
+                    {markers.filter((m) => m.weather).length > 0 && (
+                      <div>
+                        Weather Data: {markers.filter((m) => m.weather).length}/{markers.length}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 

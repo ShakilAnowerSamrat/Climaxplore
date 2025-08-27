@@ -54,6 +54,8 @@ export async function generateWeatherInsights(request: WeatherInsightRequest) {
     const response = await result.response
     let text = response.text().trim()
 
+    console.log("[v0] Raw Gemini response:", text)
+
     // Remove any markdown formatting or extra text
     if (text.includes("```json")) {
       text = text.split("```json")[1].split("```")[0].trim()
@@ -68,16 +70,35 @@ export async function generateWeatherInsights(request: WeatherInsightRequest) {
       text = text.substring(jsonStart, jsonEnd + 1)
     }
 
-    console.log("[v0] Raw Gemini response:", text)
+    // Validate JSON structure
+    if (!text.startsWith("{") || !text.endsWith("}")) {
+      throw new Error("Invalid JSON structure: missing opening or closing braces")
+    }
+
+    // Count braces to ensure they're balanced
+    const openBraces = (text.match(/\{/g) || []).length
+    const closeBraces = (text.match(/\}/g) || []).length
+    if (openBraces !== closeBraces) {
+      throw new Error(`Unbalanced braces: ${openBraces} opening, ${closeBraces} closing`)
+    }
+
+    console.log("[v0] Cleaned JSON text:", text)
 
     try {
       const parsed = JSON.parse(text)
       console.log("[v0] Successfully parsed JSON:", parsed)
+
+      // Validate required fields
+      if (!parsed.summary || !Array.isArray(parsed.riskFactors) || !Array.isArray(parsed.recommendations)) {
+        throw new Error("Missing required fields in parsed JSON")
+      }
+
       return parsed
     } catch (parseError) {
       console.error("[v0] JSON parsing failed:", parseError)
       console.error("[v0] Attempted to parse:", text)
 
+      // Return fallback response instead of throwing
       return {
         summary: "Weather analysis is available, but there was a formatting issue with the AI response.",
         riskFactors: [
@@ -94,6 +115,7 @@ export async function generateWeatherInsights(request: WeatherInsightRequest) {
     }
   } catch (error) {
     console.error("Gemini API error:", error)
+    // Return fallback instead of throwing to prevent unhandled promise rejection
     return {
       summary: "Unable to generate AI insights at this time due to API connectivity issues.",
       riskFactors: [],
@@ -169,6 +191,8 @@ export async function analyzeWeatherAnomalies(weatherData: any, historicalData: 
     const response = await result.response
     let text = response.text().trim()
 
+    console.log("[v0] Raw anomaly response:", text)
+
     if (text.includes("```json")) {
       text = text.split("```json")[1].split("```")[0].trim()
     } else if (text.includes("```")) {
@@ -181,9 +205,27 @@ export async function analyzeWeatherAnomalies(weatherData: any, historicalData: 
       text = text.substring(jsonStart, jsonEnd + 1)
     }
 
+    // Validate JSON structure
+    if (!text.startsWith("{") || !text.endsWith("}")) {
+      throw new Error("Invalid JSON structure in anomaly analysis")
+    }
+
+    // Count braces to ensure they're balanced
+    const openBraces = (text.match(/\{/g) || []).length
+    const closeBraces = (text.match(/\}/g) || []).length
+    if (openBraces !== closeBraces) {
+      throw new Error(`Unbalanced braces in anomaly analysis: ${openBraces} opening, ${closeBraces} closing`)
+    }
+
     try {
-      return JSON.parse(text)
-    } catch {
+      const parsed = JSON.parse(text)
+      console.log("[v0] Successfully parsed anomaly JSON:", parsed)
+      return parsed
+    } catch (parseError) {
+      console.error("[v0] Anomaly JSON parsing failed:", parseError)
+      console.error("[v0] Attempted to parse:", text)
+
+      // Return fallback instead of throwing
       return {
         anomalies: [],
         explanation: "Anomaly analysis completed but response formatting needs adjustment.",
@@ -193,6 +235,7 @@ export async function analyzeWeatherAnomalies(weatherData: any, historicalData: 
     }
   } catch (error) {
     console.error("Anomaly analysis error:", error)
+    // Return fallback instead of throwing to prevent unhandled promise rejection
     return {
       anomalies: [],
       explanation: "Unable to analyze weather anomalies at this time.",

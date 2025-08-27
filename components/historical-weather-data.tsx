@@ -28,12 +28,33 @@ export function HistoricalWeatherData({ lat, lon, location }: HistoricalWeatherD
   const fetchHistoricalData = async () => {
     setLoading(true)
     try {
+      console.log("[v0] Fetching historical data for:", { lat, lon, selectedPeriod })
       const data = await getHistoricalWeather(lat, lon, selectedPeriod)
+      console.log("[v0] Historical data received:", data)
+      console.log("[v0] Data type:", typeof data, "Is array:", Array.isArray(data))
+
       const validData = Array.isArray(data) ? data : []
-      setHistoricalData(validData)
-      calculateWeatherStats(validData)
+      console.log("[v0] Valid data length:", validData.length)
+
+      const formattedData = validData.map((item, index) => ({
+        ...item,
+        date: new Date(item.dt * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        fullDate: new Date(item.dt * 1000).toLocaleDateString(),
+        dateTime: new Date(item.dt * 1000),
+        index: index,
+        // Ensure all numeric values are properly formatted
+        temp: Number(item.temp),
+        pressure: Number(item.pressure),
+        humidity: Number(item.humidity),
+        wind_speed: Number(item.wind_speed),
+      }))
+
+      console.log("[v0] Formatted data sample:", formattedData[0])
+      console.log("[v0] Chart data ready:", formattedData.length > 0)
+      setHistoricalData(formattedData)
+      calculateWeatherStats(formattedData)
     } catch (error) {
-      console.error("Failed to fetch historical data:", error)
+      console.error("[v0] Failed to fetch historical data:", error)
       setHistoricalData([])
     } finally {
       setLoading(false)
@@ -239,18 +260,58 @@ export function HistoricalWeatherData({ lat, lon, location }: HistoricalWeatherD
               <CardTitle>Temperature History</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={historicalData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="dt" tickFormatter={(value) => new Date(value * 1000).toLocaleDateString()} />
-                  <YAxis />
-                  <Tooltip
-                    labelFormatter={(value) => new Date(value * 1000).toLocaleDateString()}
-                    formatter={(value: number) => [`${value.toFixed(1)}°C`, "Temperature"]}
-                  />
-                  <Line type="monotone" dataKey="temp" stroke="#0ea5e9" strokeWidth={2} />
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="mb-4 text-sm text-muted-foreground">Chart Data Points: {historicalData.length}</div>
+              {historicalData.length > 0 && (
+                <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+                  <div>Debug Info:</div>
+                  <div>Data Length: {historicalData.length}</div>
+                  <div>Sample Data: {JSON.stringify(historicalData[0], null, 2).substring(0, 200)}...</div>
+                  <div>
+                    Date Range: {historicalData[0]?.date} to {historicalData[historicalData.length - 1]?.date}
+                  </div>
+                </div>
+              )}
+              <div className="w-full h-[400px] border border-gray-300 dark:border-gray-600 rounded">
+                {historicalData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis
+                        dataKey="date"
+                        stroke="#9CA3AF"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        interval={0}
+                      />
+                      <YAxis stroke="#9CA3AF" fontSize={12} />
+                      <Tooltip
+                        labelFormatter={(label) => `Date: ${label}`}
+                        formatter={(value: number) => [`${value.toFixed(1)}°C`, "Temperature"]}
+                        contentStyle={{
+                          backgroundColor: "#1F2937",
+                          border: "1px solid #374151",
+                          borderRadius: "6px",
+                          color: "#F9FAFB",
+                        }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="temp"
+                        stroke="#0ea5e9"
+                        strokeWidth={3}
+                        dot={{ fill: "#0ea5e9", strokeWidth: 2, r: 6 }}
+                        activeDot={{ r: 8, stroke: "#0ea5e9", strokeWidth: 3 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    No temperature data available
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -261,18 +322,48 @@ export function HistoricalWeatherData({ lat, lon, location }: HistoricalWeatherD
               <CardTitle>Atmospheric Pressure History</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={historicalData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="dt" tickFormatter={(value) => new Date(value * 1000).toLocaleDateString()} />
-                  <YAxis />
-                  <Tooltip
-                    labelFormatter={(value) => new Date(value * 1000).toLocaleDateString()}
-                    formatter={(value: number) => [`${value.toFixed(1)} hPa`, "Pressure"]}
-                  />
-                  <Line type="monotone" dataKey="pressure" stroke="#10b981" strokeWidth={2} />
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="mb-4 text-sm text-muted-foreground">Chart Data Points: {historicalData.length}</div>
+              <div className="w-full h-[400px] border border-gray-300 dark:border-gray-600 rounded">
+                {historicalData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis
+                        dataKey="date"
+                        stroke="#9CA3AF"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        interval={0}
+                      />
+                      <YAxis stroke="#9CA3AF" fontSize={12} />
+                      <Tooltip
+                        labelFormatter={(label) => `Date: ${label}`}
+                        formatter={(value: number) => [`${value.toFixed(1)} hPa`, "Pressure"]}
+                        contentStyle={{
+                          backgroundColor: "#1F2937",
+                          border: "1px solid #374151",
+                          borderRadius: "6px",
+                          color: "#F9FAFB",
+                        }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="pressure"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        dot={{ fill: "#10b981", strokeWidth: 2, r: 6 }}
+                        activeDot={{ r: 8, stroke: "#10b981", strokeWidth: 3 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    No pressure data available
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -283,18 +374,41 @@ export function HistoricalWeatherData({ lat, lon, location }: HistoricalWeatherD
               <CardTitle>Humidity History</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={historicalData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="dt" tickFormatter={(value) => new Date(value * 1000).toLocaleDateString()} />
-                  <YAxis />
-                  <Tooltip
-                    labelFormatter={(value) => new Date(value * 1000).toLocaleDateString()}
-                    formatter={(value: number) => [`${value.toFixed(1)}%`, "Humidity"]}
-                  />
-                  <Bar dataKey="humidity" fill="#eab308" />
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="mb-4 text-sm text-muted-foreground">Chart Data Points: {historicalData.length}</div>
+              <div className="w-full h-[400px] border border-gray-300 dark:border-gray-600 rounded">
+                {historicalData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis
+                        dataKey="date"
+                        stroke="#9CA3AF"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        interval={0}
+                      />
+                      <YAxis stroke="#9CA3AF" fontSize={12} />
+                      <Tooltip
+                        labelFormatter={(label) => `Date: ${label}`}
+                        formatter={(value: number) => [`${value.toFixed(1)}%`, "Humidity"]}
+                        contentStyle={{
+                          backgroundColor: "#1F2937",
+                          border: "1px solid #374151",
+                          borderRadius: "6px",
+                          color: "#F9FAFB",
+                        }}
+                      />
+                      <Bar dataKey="humidity" fill="#eab308" radius={[2, 2, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    No humidity data available
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -305,18 +419,41 @@ export function HistoricalWeatherData({ lat, lon, location }: HistoricalWeatherD
               <CardTitle>Wind Speed History</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={historicalData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="dt" tickFormatter={(value) => new Date(value * 1000).toLocaleDateString()} />
-                  <YAxis />
-                  <Tooltip
-                    labelFormatter={(value) => new Date(value * 1000).toLocaleDateString()}
-                    formatter={(value: number) => [`${value.toFixed(1)} m/s`, "Wind Speed"]}
-                  />
-                  <Bar dataKey="wind_speed" fill="#06b6d4" />
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="mb-4 text-sm text-muted-foreground">Chart Data Points: {historicalData.length}</div>
+              <div className="w-full h-[400px] border border-gray-300 dark:border-gray-600 rounded">
+                {historicalData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={historicalData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis
+                        dataKey="date"
+                        stroke="#9CA3AF"
+                        fontSize={12}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        interval={0}
+                      />
+                      <YAxis stroke="#9CA3AF" fontSize={12} />
+                      <Tooltip
+                        labelFormatter={(label) => `Date: ${label}`}
+                        formatter={(value: number) => [`${value.toFixed(1)} m/s`, "Wind Speed"]}
+                        contentStyle={{
+                          backgroundColor: "#1F2937",
+                          border: "1px solid #374151",
+                          borderRadius: "6px",
+                          color: "#F9FAFB",
+                        }}
+                      />
+                      <Bar dataKey="wind_speed" fill="#06b6d4" radius={[2, 2, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    No wind speed data available
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
