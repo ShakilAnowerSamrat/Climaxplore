@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* NASA Mission Control Theme - Space-inspired color palette */
+  --background: oklch(0.965 0.004 247.858); /* #f3f4f6 Light Gray */
+  --foreground: oklch(0.278 0.015 255.395); /* #1f2937 Dark Gray */
+  --card: oklch(1 0 0 / 0.8); /* Semi-transparent white for glass effect */
+  --card-foreground: oklch(0 0 0); /* #000000 Black */
+  --popover: oklch(1 0 0); /* #ffffff White */
+  --popover-foreground: oklch(0.278 0.015 255.395); /* #1f2937 Dark Gray */
+  --primary: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
+  --primary-foreground: oklch(1 0 0); /* #ffffff White */
+  --secondary: oklch(0.85 0.12 85.87); /* #ffcc00 NASA Gold */
+  --secondary-foreground: oklch(0 0 0); /* #000000 Black */
+  --muted: oklch(0.965 0.004 247.858); /* #f3f4f6 Muted background */
+  --muted-foreground: oklch(0.478 0.015 255.395); /* #4b5563 Muted text */
+  --accent: oklch(0.85 0.12 85.87); /* #ffcc00 NASA Gold */
+  --accent-foreground: oklch(0 0 0); /* #000000 Black */
+  --destructive: oklch(0.548 0.227 27.33); /* #e53e3e Red */
+  --destructive-foreground: oklch(1 0 0); /* #ffffff White */
+  --border: oklch(0.922 0.013 247.858); /* #e5e7eb Light border */
+  --input: oklch(1 0 0); /* #ffffff White */
+  --ring: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
+  --chart-1: oklch(0.6 0.15 270); /* #6366f1 Space Purple */
+  --chart-2: oklch(0.7 0.15 140); /* #4ade80 Space Green */
+  --chart-3: oklch(0.75 0.12 85.87); /* #fbbf24 Space Yellow */
+  --chart-4: oklch(0.7 0.15 25); /* #fca5a1 Space Coral */
+  --chart-5: oklch(0.75 0.1 270); /* #a5b4fc Light Space Purple */
+  --radius: 0.5rem;
+  --sidebar: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
+  --sidebar-foreground: oklch(1 0 0); /* #ffffff White */
+  --sidebar-primary: oklch(0.85 0.12 85.87); /* #ffcc00 NASA Gold */
+  --sidebar-primary-foreground: oklch(0 0 0); /* #000000 Black */
+  --sidebar-accent: oklch(0.6 0.15 270); /* #6366f1 Space Purple */
+  --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff White */
+  --sidebar-border: oklch(0.922 0.013 247.858); /* #e5e7eb */
+  --sidebar-ring: oklch(0.35 0.15 258.34); /* #0b3d91 Deep Space Blue */
+}
+
+.dark {
+  /* Dark mode - Deep space theme */
+  --background: oklch(0.08 0.02 258.34); /* Deep space background */
+  --foreground: oklch(0.985 0 0); /* Bright white text */
+  --card: oklch(0.12 0.02 258.34 / 0.8); /* Semi-transparent dark cards */
+  --card-foreground: oklch(0.985 0 0); /* Bright white card text */
+  --popover: oklch(0.12 0.02 258.34); /* Dark popover */
+  --popover-foreground: oklch(0.985 0 0); /* Bright white popover text */
+  --primary: oklch(0.45 0.15 258.34); /* Lighter space blue for dark mode */
+  --primary-foreground: oklch(1 0 0); /* White text */
+  --secondary: oklch(0.85 0.12 85.87); /* Keep NASA Gold */
+  --secondary-foreground: oklch(0 0 0); /* Black text */
+  --muted: oklch(0.15 0.02 258.34); /* Muted dark background */
+  --muted-foreground: oklch(0.708 0 0); /* Muted light text */
+  --accent: oklch(0.85 0.12 85.87); /* NASA Gold accent */
+  --accent-foreground: oklch(0 0 0); /* Black accent text */
+  --destructive: oklch(0.65 0.227 27.33); /* Lighter red for dark mode */
+  --destructive-foreground: oklch(1 0 0); /* White text */
+  --border: oklch(0.2 0.02 258.34); /* Dark border */
+  --input: oklch(0.15 0.02 258.34); /* Dark input background */
+  --ring: oklch(0.45 0.15 258.34); /* Lighter space blue ring */
+  --chart-1: oklch(0.7 0.15 270); /* Brighter space purple */
+  --chart-2: oklch(0.8 0.15 140); /* Brighter space green */
+  --chart-3: oklch(0.85 0.12 85.87); /* NASA Gold */
+  --chart-4: oklch(0.8 0.15 25); /* Brighter space coral */
+  --chart-5: oklch(0.85 0.1 270); /* Brighter light space purple */
+  --sidebar: oklch(0.1 0.02 258.34); /* Dark sidebar */
+  --sidebar-foreground: oklch(0.985 0 0); /* Bright white sidebar text */
+  --sidebar-primary: oklch(0.85 0.12 85.87); /* NASA Gold */
+  --sidebar-primary-foreground: oklch(0 0 0); /* Black text */
+  --sidebar-accent: oklch(0.7 0.15 270); /* Brighter space purple */
+  --sidebar-accent-foreground: oklch(1 0 0); /* White text */
+  --sidebar-border: oklch(0.2 0.02 258.34); /* Dark border */
+  --sidebar-ring: oklch(0.45 0.15 258.34); /* Lighter space blue ring */
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Adding starfield background pattern for NASA theme */
+    background-image: radial-gradient(2px 2px at 20px 30px, #ffffff20, transparent),
+      radial-gradient(2px 2px at 40px 70px, #ffffff15, transparent),
+      radial-gradient(1px 1px at 90px 40px, #ffffff25, transparent),
+      radial-gradient(1px 1px at 130px 80px, #ffffff20, transparent),
+      radial-gradient(2px 2px at 160px 30px, #ffffff15, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+  }
+
+  /* Adding NASA-style glow effects */
+  .nasa-glow {
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+  }
+
+  .mission-control-panel {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
