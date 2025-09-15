@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 
-const genAI = new GoogleGenerativeAI("AIzaSyDtnP2mlFOjWlNJ9okzeY3IhH5C8phZzio")
+const genAI = new GoogleGenerativeAI("AIzaSyD9aWD30DTdt17OE-x0AClObT5ahn_e-f4")
 
 export interface WeatherInsightRequest {
   weatherData: any
@@ -17,7 +17,7 @@ export interface WeatherChatRequest {
 
 export async function generateWeatherInsights(request: WeatherInsightRequest) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
 
     const prompt = `
     You are a NASA-trained meteorological AI assistant specializing in weather risk assessment for outdoor activities.
@@ -128,7 +128,7 @@ export async function generateWeatherInsights(request: WeatherInsightRequest) {
 
 export async function chatWithWeatherAssistant(request: WeatherChatRequest) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
 
     const conversationContext =
       request.conversationHistory?.map((msg) => `${msg.role}: ${msg.content}`).join("\n") || ""
@@ -165,7 +165,7 @@ export async function chatWithWeatherAssistant(request: WeatherChatRequest) {
 
 export async function analyzeWeatherAnomalies(weatherData: any, historicalData: any[]) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
 
     const prompt = `
     As a NASA meteorological AI, analyze this weather data for anomalies:
@@ -247,7 +247,7 @@ export async function analyzeWeatherAnomalies(weatherData: any, historicalData: 
 
 export async function generateActivityPlan(weatherForecast: any[], activities: string[], userPreferences: any) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
 
     const prompt = `
     As ARIA, NASA's weather planning AI, create an optimal activity schedule:

@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -22,42 +21,172 @@ import {
   Gauge,
 } from "lucide-react"
 import { getCurrentWeather } from "@/lib/weather-api"
-import { assessActivityRisk, type ActivityType } from "@/lib/risk-assessment"
-import type { UserPreferences } from "@/lib/weather-api"
+import { assessActivityRisk } from "@/lib/risk-assessment"
 import { WeatherMap3D } from "./weather-map-3d"
+import type { WeatherMapProps, MapMarker } from "@/types/weather-map"
 
-interface WeatherMapProps {
-  onLocationSelect: (lat: number, lon: number, name: string) => void
-  currentLocation?: { lat: number; lon: number; name: string }
-  activity: ActivityType
-  preferences: UserPreferences
-}
+const WorldMapSVG = () => (
+  <svg
+    viewBox="0 0 1000 500"
+    className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
+    style={{ filter: "drop-shadow(0 0 2px rgba(0,0,0,0.1))" }}
+  >
+    {/* Continents and major countries */}
+    {/* North America */}
+    <path
+      d="M150 120 L280 110 L290 140 L320 130 L340 160 L300 180 L280 200 L250 190 L200 200 L180 180 L150 160 Z"
+      fill="rgba(34, 197, 94, 0.3)"
+      stroke="rgba(34, 197, 94, 0.6)"
+      strokeWidth="1"
+    />
+    {/* South America */}
+    <path
+      d="M250 220 L280 210 L290 240 L300 280 L290 320 L270 340 L250 330 L240 300 L245 260 Z"
+      fill="rgba(34, 197, 94, 0.3)"
+      stroke="rgba(34, 197, 94, 0.6)"
+      strokeWidth="1"
+    />
+    {/* Europe */}
+    <path
+      d="M480 100 L520 95 L530 110 L525 130 L510 140 L490 135 L475 120 Z"
+      fill="rgba(34, 197, 94, 0.3)"
+      stroke="rgba(34, 197, 94, 0.6)"
+      strokeWidth="1"
+    />
+    {/* Africa */}
+    <path
+      d="M470 150 L520 145 L540 170 L545 200 L540 240 L520 270 L500 280 L480 270 L470 240 L475 200 L470 170 Z"
+      fill="rgba(34, 197, 94, 0.3)"
+      stroke="rgba(34, 197, 94, 0.6)"
+      strokeWidth="1"
+    />
+    {/* Asia */}
+    <path
+      d="M550 90 L700 85 L720 110 L740 130 L750 160 L730 180 L700 170 L680 150 L650 140 L620 130 L580 120 L550 110 Z"
+      fill="rgba(34, 197, 94, 0.3)"
+      stroke="rgba(34, 197, 94, 0.6)"
+      strokeWidth="1"
+    />
+    {/* Australia */}
+    <path
+      d="M720 280 L780 275 L790 290 L785 305 L770 310 L750 305 L730 295 Z"
+      fill="rgba(34, 197, 94, 0.3)"
+      stroke="rgba(34, 197, 94, 0.6)"
+      strokeWidth="1"
+    />
 
-interface MapMarker {
-  lat: number
-  lon: number
-  name: string
-  weather?: any
-  risk?: string
-}
+    {/* Major country labels */}
+    <text x="220" y="160" fontSize="12" fill="rgba(34, 197, 94, 0.8)" fontWeight="500">
+      USA
+    </text>
+    <text x="265" y="280" fontSize="12" fill="rgba(34, 197, 94, 0.8)" fontWeight="500">
+      Brazil
+    </text>
+    <text x="500" y="120" fontSize="12" fill="rgba(34, 197, 94, 0.8)" fontWeight="500">
+      Europe
+    </text>
+    <text x="500" y="220" fontSize="12" fill="rgba(34, 197, 94, 0.8)" fontWeight="500">
+      Africa
+    </text>
+    <text x="650" y="130" fontSize="12" fill="rgba(34, 197, 94, 0.8)" fontWeight="500">
+      Asia
+    </text>
+    <text x="750" y="295" fontSize="12" fill="rgba(34, 197, 94, 0.8)" fontWeight="500">
+      Australia
+    </text>
 
-const MAJOR_CITIES = [
-  { name: "New York", lat: 40.7128, lon: -74.006 },
-  { name: "Los Angeles", lat: 34.0522, lon: -118.2437 },
-  { name: "Chicago", lat: 41.8781, lon: -87.6298 },
-  { name: "Houston", lat: 29.7604, lon: -95.3698 },
-  { name: "Phoenix", lat: 33.4484, lon: -112.074 },
-  { name: "Philadelphia", lat: 39.9526, lon: -75.1652 },
-  { name: "San Antonio", lat: 29.4241, lon: -98.4936 },
-  { name: "San Diego", lat: 32.7157, lon: -117.1611 },
-  { name: "Dallas", lat: 32.7767, lon: -96.797 },
-  { name: "San Jose", lat: 37.3382, lon: -121.8863 },
-  { name: "Miami", lat: 25.7617, lon: -80.1918 },
-  { name: "Seattle", lat: 47.6062, lon: -122.3321 },
-  { name: "Denver", lat: 39.7392, lon: -104.9903 },
-  { name: "Boston", lat: 42.3601, lon: -71.0589 },
-  { name: "Atlanta", lat: 33.749, lon: -84.388 },
-]
+    {/* Ocean areas */}
+    <circle
+      cx="100"
+      cy="200"
+      r="30"
+      fill="rgba(59, 130, 246, 0.2)"
+      stroke="rgba(59, 130, 246, 0.4)"
+      strokeWidth="1"
+      strokeDasharray="3,3"
+    />
+    <circle
+      cx="400"
+      cy="250"
+      r="40"
+      fill="rgba(59, 130, 246, 0.2)"
+      stroke="rgba(59, 130, 246, 0.4)"
+      strokeWidth="1"
+      strokeDasharray="3,3"
+    />
+    <circle
+      cx="850"
+      cy="200"
+      r="35"
+      fill="rgba(59, 130, 246, 0.2)"
+      stroke="rgba(59, 130, 246, 0.4)"
+      strokeWidth="1"
+      strokeDasharray="3,3"
+    />
+
+    {/* Ocean labels */}
+    <text x="100" y="205" fontSize="10" fill="rgba(59, 130, 246, 0.7)" textAnchor="middle">
+      Atlantic
+    </text>
+    <text x="400" y="255" fontSize="10" fill="rgba(59, 130, 246, 0.7)" textAnchor="middle">
+      Atlantic
+    </text>
+    <text x="850" y="205" fontSize="10" fill="rgba(59, 130, 246, 0.7)" textAnchor="middle">
+      Pacific
+    </text>
+
+    {/* Latitude/Longitude grid lines */}
+    <g stroke="rgba(107, 114, 128, 0.2)" strokeWidth="0.5" strokeDasharray="2,2">
+      {/* Latitude lines */}
+      <line x1="0" y1="125" x2="1000" y2="125" /> {/* 60°N */}
+      <line x1="0" y1="167" x2="1000" y2="167" /> {/* 30°N */}
+      <line x1="0" y1="250" x2="1000" y2="250" /> {/* Equator */}
+      <line x1="0" y1="333" x2="1000" y2="333" /> {/* 30°S */}
+      <line x1="0" y1="375" x2="1000" y2="375" /> {/* 60°S */}
+      {/* Longitude lines */}
+      <line x1="167" y1="0" x2="167" y2="500" /> {/* 120°W */}
+      <line x1="333" y1="0" x2="333" y2="500" /> {/* 60°W */}
+      <line x1="500" y1="0" x2="500" y2="500" /> {/* 0° */}
+      <line x1="667" y1="0" x2="667" y2="500" /> {/* 60°E */}
+      <line x1="833" y1="0" x2="833" y2="500" /> {/* 120°E */}
+    </g>
+
+    {/* Coordinate labels */}
+    <g fontSize="8" fill="rgba(107, 114, 128, 0.6)">
+      <text x="10" y="130">
+        60°N
+      </text>
+      <text x="10" y="172">
+        30°N
+      </text>
+      <text x="10" y="255">
+        0°
+      </text>
+      <text x="10" y="338">
+        30°S
+      </text>
+      <text x="10" y="380">
+        60°S
+      </text>
+
+      <text x="165" y="15">
+        120°W
+      </text>
+      <text x="330" y="15">
+        60°W
+      </text>
+      <text x="495" y="15">
+        0°
+      </text>
+      <text x="662" y="15">
+        60°E
+      </text>
+      <text x="828" y="15">
+        120°E
+      </text>
+    </g>
+  </svg>
+)
 
 export function WeatherMap({ onLocationSelect, currentLocation, activity, preferences }: WeatherMapProps) {
   const [markers, setMarkers] = useState<MapMarker[]>([])
@@ -320,21 +449,9 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
               className="relative w-full h-96 bg-gradient-to-br from-blue-50 via-green-50 to-blue-100 dark:from-blue-950 dark:via-green-950 dark:to-blue-900 cursor-crosshair overflow-hidden rounded-lg"
               onClick={handleMapClick}
             >
-              <div className="absolute inset-0 opacity-10">
-                <svg width="100%" height="100%">
-                  <defs>
-                    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="currentColor" strokeWidth="0.5" />
-                    </pattern>
-                    <pattern id="majorGrid" width="120" height="120" patternUnits="userSpaceOnUse">
-                      <path d="M 120 0 L 0 0 0 120" fill="none" stroke="currentColor" strokeWidth="1" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#grid)" />
-                  <rect width="100%" height="100%" fill="url(#majorGrid)" />
-                </svg>
-              </div>
+              <WorldMapSVG />
 
+              {/* Weather overlay circles */}
               <div className="absolute inset-0 pointer-events-none">
                 {markers.map((marker, index) => {
                   if (!marker.weather) return null
@@ -350,15 +467,18 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
                             ? marker.weather.current.visibility || 10000
                             : marker.weather.current.pressure || 1013
 
+                  const x = ((marker.lon + 180) / 360) * 100
+                  const y = ((90 - marker.lat) / 180) * 100
+
                   return (
                     <div
                       key={`overlay-${index}`}
                       className="absolute rounded-full animate-pulse"
                       style={{
-                        left: `${50 + ((marker.lon - mapCenter.lon) / (zoom * 0.1)) * 50}%`,
-                        top: `${50 - ((marker.lat - mapCenter.lat) / (zoom * 0.1)) * 50}%`,
-                        width: "100px",
-                        height: "100px",
+                        left: `${x}%`,
+                        top: `${y}%`,
+                        width: "80px",
+                        height: "80px",
                         backgroundColor: getWeatherOverlayColor(value, mapMode),
                         transform: "translate(-50%, -50%)",
                         border: "2px solid rgba(255,255,255,0.3)",
@@ -368,88 +488,94 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
                 })}
               </div>
 
-              {markers.map((marker, index) => (
-                <div
-                  key={index}
-                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 group"
-                  style={{
-                    left: `${50 + ((marker.lon - mapCenter.lon) / (zoom * 0.1)) * 50}%`,
-                    top: `${50 - ((marker.lat - mapCenter.lat) / (zoom * 0.1)) * 50}%`,
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleMarkerClick(marker)
-                  }}
-                >
+              {/* Weather markers */}
+              {markers.map((marker, index) => {
+                const x = ((marker.lon + 180) / 360) * 100
+                const y = ((90 - marker.lat) / 180) * 100
+
+                return (
                   <div
-                    className="w-8 h-8 rounded-full border-3 border-white shadow-lg flex items-center justify-center transition-transform group-hover:scale-110"
-                    style={{ backgroundColor: getRiskColor(marker.risk) }}
+                    key={index}
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-10 group"
+                    style={{
+                      left: `${x}%`,
+                      top: `${y}%`,
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleMarkerClick(marker)
+                    }}
                   >
-                    {marker.weather ? getWeatherIcon(marker.weather) : <MapPin className="h-4 w-4 text-white" />}
-                  </div>
-
-                  <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-black/75 text-white text-xs px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                    {marker.name}
-                    {marker.weather && <div className="text-center">{Math.round(marker.weather.current.temp)}°C</div>}
-                  </div>
-
-                  {selectedMarker === marker && (
-                    <div className="absolute top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card border rounded-lg p-4 shadow-xl min-w-64 z-20">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="text-sm font-semibold">{marker.name}</div>
-                        {marker.weather && getWeatherIcon(marker.weather)}
-                      </div>
-                      {marker.weather && (
-                        <div className="space-y-2 text-xs">
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Temperature:</span>
-                              <span className="font-medium">{Math.round(marker.weather.current.temp)}°C</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Feels like:</span>
-                              <span className="font-medium">{Math.round(marker.weather.current.feels_like)}°C</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Wind:</span>
-                              <span className="font-medium">{marker.weather.current.wind_speed} m/s</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Humidity:</span>
-                              <span className="font-medium">{marker.weather.current.humidity}%</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Pressure:</span>
-                              <span className="font-medium">{marker.weather.current.pressure} hPa</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">UV Index:</span>
-                              <span className="font-medium">{marker.weather.current.uvi || "N/A"}</span>
-                            </div>
-                          </div>
-                          <div className="border-t pt-2 mt-2">
-                            <div className="flex justify-between items-center">
-                              <span className="text-muted-foreground">Activity Risk:</span>
-                              <Badge
-                                className="text-xs font-medium"
-                                style={{
-                                  backgroundColor: getRiskColor(marker.risk),
-                                  color: "white",
-                                }}
-                              >
-                                {marker.risk?.toUpperCase()}
-                              </Badge>
-                            </div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {marker.weather.current.weather?.[0]?.description || "Weather conditions"}
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                    <div
+                      className="w-8 h-8 rounded-full border-3 border-white shadow-lg flex items-center justify-center transition-transform group-hover:scale-110"
+                      style={{ backgroundColor: getRiskColor(marker.risk) }}
+                    >
+                      {marker.weather ? getWeatherIcon(marker.weather) : <MapPin className="h-4 w-4 text-white" />}
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-black/75 text-white text-xs px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                      {marker.name}
+                      {marker.weather && <div className="text-center">{Math.round(marker.weather.current.temp)}°C</div>}
+                    </div>
+
+                    {selectedMarker === marker && (
+                      <div className="absolute top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card border rounded-lg p-4 shadow-xl min-w-64 z-20">
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="text-sm font-semibold">{marker.name}</div>
+                          {marker.weather && getWeatherIcon(marker.weather)}
+                        </div>
+                        {marker.weather && (
+                          <div className="space-y-2 text-xs">
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Temperature:</span>
+                                <span className="font-medium">{Math.round(marker.weather.current.temp)}°C</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Feels like:</span>
+                                <span className="font-medium">{Math.round(marker.weather.current.feels_like)}°C</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Wind:</span>
+                                <span className="font-medium">{marker.weather.current.wind_speed} m/s</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Humidity:</span>
+                                <span className="font-medium">{marker.weather.current.humidity}%</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">Pressure:</span>
+                                <span className="font-medium">{marker.weather.current.pressure} hPa</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">UV Index:</span>
+                                <span className="font-medium">{marker.weather.current.uvi || "N/A"}</span>
+                              </div>
+                            </div>
+                            <div className="border-t pt-2 mt-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Activity Risk:</span>
+                                <Badge
+                                  className="text-xs font-medium"
+                                  style={{
+                                    backgroundColor: getRiskColor(marker.risk),
+                                    color: "white",
+                                  }}
+                                >
+                                  {marker.risk?.toUpperCase()}
+                                </Badge>
+                              </div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {marker.weather.current.weather?.[0]?.description || "Weather conditions"}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
 
               {/* Center Crosshair */}
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
@@ -665,3 +791,16 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
     </div>
   )
 }
+
+const MAJOR_CITIES = [
+  { name: "New York", lat: 40.7128, lon: -74.006 },
+  { name: "Los Angeles", lat: 34.0522, lon: -118.2437 },
+  { name: "Chicago", lat: 41.8781, lon: -87.6298 },
+  { name: "Houston", lat: 29.7604, lon: -95.3698 },
+  { name: "Phoenix", lat: 33.4484, lon: -112.074 },
+  { name: "Philadelphia", lat: 39.9526, lon: -75.1652 },
+  { name: "San Antonio", lat: 29.4241, lon: -98.4936 },
+  { name: "San Diego", lat: 32.7157, lon: -117.1611 },
+  { name: "Dallas", lat: 32.7767, lon: -96.797 },
+  { name: "San Jose", lat: 37.3382, lon: -121.8863 },
+]
