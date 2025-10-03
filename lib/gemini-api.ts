@@ -271,7 +271,7 @@ export async function generateActivityPlan(weatherForecast: any[], activities: s
     {
       "dailyPlans": [
         {
-          "date": "2024-01-01",
+          "date": "2025-01-01",
           "recommended": [{"activity": "hiking", "timeSlot": "morning", "reason": "..."}],
           "avoid": [{"activity": "cycling", "reason": "high winds expected"}],
           "backup": "Indoor climbing gym"

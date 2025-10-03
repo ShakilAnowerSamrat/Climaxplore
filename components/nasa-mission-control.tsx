@@ -72,7 +72,7 @@ export function NASAMissionControl({ weatherData, location, onLocationChange }: 
               <Satellite className="h-8 w-8 text-primary" />
               <div>
                 <h1 className="text-2xl font-bold text-primary">WEATHER MISSION CONTROL</h1>
-                <p className="text-sm text-muted-foreground">NASA Space Apps Challenge 2024</p>
+                <p className="text-sm text-muted-foreground">NASA Space Apps Challenge 2025</p>
               </div>
             </div>
           </div>
@@ -81,7 +81,7 @@ export function NASAMissionControl({ weatherData, location, onLocationChange }: 
               {missionTime.toLocaleTimeString("en-US", { hour12: false })} UTC
             </div>
             <div className="text-sm text-muted-foreground">
-              Mission Day: {Math.floor((Date.now() - new Date("2024-01-01").getTime()) / (1000 * 60 * 60 * 24))}
+              Mission Day: {Math.floor((Date.now() - new Date("2025-01-01").getTime()) / (1000 * 60 * 60 * 24))}
             </div>
           </div>
         </div>

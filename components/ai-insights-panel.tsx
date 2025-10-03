@@ -98,11 +98,11 @@ export default function AIInsightsPanel({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Brain className="h-5 w-5 text-cyan-500" />
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">AI Weather Intelligence</h3>
+          <Brain className="h-5 w-5 text-cyan-400" />
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">AI Weather Intelligence</h3>
           <Badge
             variant="outline"
-            className="border-emerald-400 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
+            className="border-cyan-500/50 text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 dark:bg-cyan-500/20"
           >
             <Zap className="h-3 w-3 mr-1" />
             Powered by Gemini
@@ -113,7 +113,7 @@ export default function AIInsightsPanel({
           disabled={isLoading}
           variant="outline"
           size="sm"
-          className="border-slate-300 hover:border-cyan-400 bg-white dark:bg-slate-800 dark:border-slate-600 dark:hover:border-cyan-500/50"
+          className="border-slate-700 hover:border-cyan-500 bg-slate-800 hover:bg-slate-700 text-white dark:border-slate-600 dark:hover:border-cyan-400"
         >
           <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
           Refresh
@@ -121,11 +121,11 @@ export default function AIInsightsPanel({
       </div>
 
       {isLoading && (
-        <Card className="bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 shadow-sm">
+        <Card className="bg-slate-900/50 dark:bg-slate-800/50 border-slate-700 dark:border-slate-700 shadow-lg backdrop-blur-sm">
           <CardContent className="p-6">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-              <span className="text-slate-700 dark:text-slate-300">ARIA is analyzing weather patterns...</span>
+              <div className="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+              <span className="text-slate-200 dark:text-slate-300">ARIA is analyzing weather patterns...</span>
             </div>
           </CardContent>
         </Card>
@@ -133,30 +133,28 @@ export default function AIInsightsPanel({
 
       {insights && (
         <>
-          {/* Weather Summary */}
-          <Card className="bg-white dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/50 shadow-sm">
-            <CardHeader className="pb-3 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20">
-              <CardTitle className="text-cyan-700 dark:text-cyan-400 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
+          <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-cyan-500/30 dark:border-cyan-500/30 shadow-lg backdrop-blur-sm">
+            <CardHeader className="pb-3 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-b border-cyan-500/20">
+              <CardTitle className="text-cyan-400 dark:text-cyan-300 flex items-center gap-2 text-base">
+                <TrendingUp className="h-5 w-5" />
                 Weather Intelligence Summary
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
-              <p className="text-slate-800 dark:text-slate-200 leading-relaxed text-base">{insights.summary}</p>
+              <p className="text-slate-100 dark:text-slate-200 leading-relaxed text-base">{insights.summary}</p>
               {lastUpdated && (
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700/50">
+                <p className="text-xs text-slate-400 dark:text-slate-400 mt-3 pt-3 border-t border-slate-700/50 dark:border-slate-700/50">
                   Last updated: {lastUpdated.toLocaleString()}
                 </p>
               )}
             </CardContent>
           </Card>
 
-          {/* Risk Factors */}
           {insights.riskFactors.length > 0 && (
-            <Card className="bg-white dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/50 shadow-sm">
-              <CardHeader className="pb-3 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
-                <CardTitle className="text-orange-700 dark:text-orange-400 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4" />
+            <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-orange-500/30 dark:border-orange-500/30 shadow-lg backdrop-blur-sm">
+              <CardHeader className="pb-3 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-b border-orange-500/20">
+                <CardTitle className="text-orange-400 dark:text-orange-300 flex items-center gap-2 text-base">
+                  <AlertTriangle className="h-5 w-5" />
                   Risk Assessment
                 </CardTitle>
               </CardHeader>
@@ -165,14 +163,14 @@ export default function AIInsightsPanel({
                   {insights.riskFactors.map((risk, index) => (
                     <div
                       key={index}
-                      className="flex items-start gap-4 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50"
+                      className="flex items-start gap-4 p-4 rounded-lg bg-slate-800/50 dark:bg-slate-800/50 border border-slate-700/50 dark:border-slate-700/50"
                     >
                       <Badge className={`${getSeverityColor(risk.severity)} font-medium px-3 py-1`}>
                         {risk.severity}
                       </Badge>
                       <div className="flex-1">
-                        <h4 className="font-semibold text-slate-900 dark:text-slate-200 mb-2">{risk.factor}</h4>
-                        <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{risk.explanation}</p>
+                        <h4 className="font-semibold text-slate-100 dark:text-slate-200 mb-2">{risk.factor}</h4>
+                        <p className="text-slate-300 dark:text-slate-300 leading-relaxed">{risk.explanation}</p>
                       </div>
                     </div>
                   ))}
@@ -181,12 +179,11 @@ export default function AIInsightsPanel({
             </Card>
           )}
 
-          {/* Recommendations */}
           {insights.recommendations.length > 0 && (
-            <Card className="bg-white dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/50 shadow-sm">
-              <CardHeader className="pb-3 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20">
-                <CardTitle className="text-emerald-700 dark:text-emerald-400 flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4" />
+            <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-emerald-500/30 dark:border-emerald-500/30 shadow-lg backdrop-blur-sm">
+              <CardHeader className="pb-3 bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-b border-emerald-500/20">
+                <CardTitle className="text-emerald-400 dark:text-emerald-300 flex items-center gap-2 text-base">
+                  <Lightbulb className="h-5 w-5" />
                   AI Recommendations
                 </CardTitle>
               </CardHeader>
@@ -195,10 +192,10 @@ export default function AIInsightsPanel({
                   {insights.recommendations.map((rec, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30"
+                      className="flex items-start gap-3 p-3 rounded-lg bg-emerald-500/10 dark:bg-emerald-500/10 border border-emerald-500/30 dark:border-emerald-500/30"
                     >
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-800 dark:text-slate-200 leading-relaxed">{rec}</span>
+                      <div className="w-2 h-2 bg-emerald-400 rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-slate-100 dark:text-slate-200 leading-relaxed">{rec}</span>
                     </li>
                   ))}
                 </ul>
@@ -206,21 +203,20 @@ export default function AIInsightsPanel({
             </Card>
           )}
 
-          {/* Alternative Activities */}
           {insights.alternatives.length > 0 && (
-            <Card className="bg-white dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/50 shadow-sm">
-              <CardHeader className="pb-3 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-                <CardTitle className="text-blue-700 dark:text-blue-400">Alternative Suggestions</CardTitle>
+            <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-blue-500/30 dark:border-blue-500/30 shadow-lg backdrop-blur-sm">
+              <CardHeader className="pb-3 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border-b border-blue-500/30">
+                <CardTitle className="text-blue-400 dark:text-blue-300 text-base">Alternative Suggestions</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <ul className="space-y-3">
                   {insights.alternatives.map((alt, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800/30"
+                      className="flex items-start gap-3 p-3 rounded-lg bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/30 dark:border-blue-500/30"
                     >
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-800 dark:text-slate-200 leading-relaxed">{alt}</span>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-slate-100 dark:text-slate-200 leading-relaxed">{alt}</span>
                     </li>
                   ))}
                 </ul>
@@ -228,33 +224,31 @@ export default function AIInsightsPanel({
             </Card>
           )}
 
-          {/* Weather Patterns */}
           {insights.patterns && (
-            <Card className="bg-white dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/50 shadow-sm">
-              <CardHeader className="pb-3 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
-                <CardTitle className="text-purple-700 dark:text-purple-400">Pattern Analysis</CardTitle>
+            <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-purple-500/30 dark:border-purple-500/30 shadow-lg backdrop-blur-sm">
+              <CardHeader className="pb-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-b border-purple-500/30">
+                <CardTitle className="text-purple-400 dark:text-purple-300 text-base">Pattern Analysis</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <p className="text-slate-800 dark:text-slate-200 leading-relaxed">{insights.patterns}</p>
+                <p className="text-slate-100 dark:text-slate-200 leading-relaxed">{insights.patterns}</p>
               </CardContent>
             </Card>
           )}
         </>
       )}
 
-      {/* Anomaly Detection */}
       {anomalies && anomalies.anomalies.length > 0 && (
-        <Card className="bg-white dark:bg-slate-800/30 border-red-200 dark:border-red-500/30 shadow-sm">
-          <CardHeader className="pb-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20">
-            <CardTitle className="text-red-700 dark:text-red-400 flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4" />
+        <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-red-500/50 dark:border-red-500/50 shadow-lg backdrop-blur-sm">
+          <CardHeader className="pb-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 border-b border-red-500/30">
+            <CardTitle className="text-red-400 dark:text-red-300 flex items-center gap-2 text-base">
+              <AlertTriangle className="h-5 w-5" />
               Weather Anomalies Detected
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            <Alert className="mb-4 border-red-200 bg-red-50 dark:border-red-500/30 dark:bg-red-500/10">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription className="text-red-800 dark:text-red-200">
+            <Alert className="mb-4 border-red-500/50 bg-red-500/10 dark:border-red-500/50 dark:bg-red-500/10">
+              <AlertTriangle className="h-4 w-4 text-red-400" />
+              <AlertDescription className="text-red-200 dark:text-red-200">
                 Unusual weather patterns detected. Review recommendations carefully.
               </AlertDescription>
             </Alert>
@@ -263,23 +257,23 @@ export default function AIInsightsPanel({
               {anomalies.anomalies.map((anomaly, index) => (
                 <div
                   key={index}
-                  className="border border-slate-200 dark:border-slate-600 rounded-lg p-4 bg-slate-50 dark:bg-slate-800/50"
+                  className="border border-slate-700 dark:border-slate-600 rounded-lg p-4 bg-slate-800/50 dark:bg-slate-800/50"
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <Badge className={getSeverityColor(anomaly.severity)}>{anomaly.type}</Badge>
-                    <span className="text-xs text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded">
+                    <span className="text-xs text-slate-300 dark:text-slate-400 bg-slate-700/50 dark:bg-slate-700 px-2 py-1 rounded">
                       Confidence: {anomalies.confidence}
                     </span>
                   </div>
-                  <p className="text-slate-800 dark:text-slate-200 leading-relaxed">{anomaly.description}</p>
+                  <p className="text-slate-100 dark:text-slate-200 leading-relaxed">{anomaly.description}</p>
                 </div>
               ))}
             </div>
 
             {anomalies.implications && (
-              <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-600">
-                <h4 className="font-semibold text-slate-900 dark:text-slate-200 mb-2">Implications:</h4>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{anomalies.implications}</p>
+              <div className="mt-4 p-4 bg-slate-800/50 dark:bg-slate-700/50 rounded-lg border border-slate-700 dark:border-slate-600">
+                <h4 className="font-semibold text-slate-100 dark:text-slate-200 mb-2">Implications:</h4>
+                <p className="text-slate-300 dark:text-slate-300 leading-relaxed">{anomalies.implications}</p>
               </div>
             )}
           </CardContent>
