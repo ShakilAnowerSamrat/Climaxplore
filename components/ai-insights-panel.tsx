@@ -99,7 +99,7 @@ export default function AIInsightsPanel({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Brain className="h-5 w-5 text-cyan-400" />
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">AI Weather Intelligence</h3>
+          <h3 className="text-lg font-semibold dark:text-white bg-primary text-primary">AI Weather Intelligence</h3>
           <Badge
             variant="outline"
             className="border-cyan-500/50 text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 dark:bg-cyan-500/20"
