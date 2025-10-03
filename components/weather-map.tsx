@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
+import dynamic from "next/dynamic"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -22,7 +23,17 @@ import {
 } from "lucide-react"
 import { getCurrentWeather } from "@/lib/weather-api"
 import { assessActivityRisk } from "@/lib/risk-assessment"
-import { WeatherMap3D } from "./weather-map-3d"
+const WeatherMap3D = dynamic(() => import("./weather-map-3d").then((mod) => mod.WeatherMap3D), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-96 bg-gradient-to-br from-slate-900 to-slate-800">
+      <div className="flex flex-col items-center gap-3">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="text-sm text-muted-foreground">Loading 3D Globe...</div>
+      </div>
+    </div>
+  ),
+})
 import type { WeatherMapProps, MapMarker } from "@/types/weather-map"
 
 const WorldMapSVG = () => (

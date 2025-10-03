@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useMemo } from "react"
+import { useRef, useState, useMemo, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Html, Environment } from "@react-three/drei"
 import * as THREE from "three"
@@ -39,8 +39,17 @@ function latLonToVector3(lat: number, lon: number, radius = 2) {
 function EarthGlobe({ markers, onLocationSelect, activity, preferences, mapMode }: WeatherMap3DProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const [selectedMarker, setSelectedMarker] = useState<any>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const earthTexture = useMemo(() => {
+    if (typeof window === "undefined" || !isMounted) {
+      return null
+    }
+
     const canvas = document.createElement("canvas")
     canvas.width = 1024
     canvas.height = 512
@@ -66,7 +75,7 @@ function EarthGlobe({ markers, onLocationSelect, activity, preferences, mapMode 
     }
 
     return new THREE.CanvasTexture(canvas)
-  }, [])
+  }, [isMounted])
 
   const getRiskColor = (risk?: string) => {
     switch (risk) {
@@ -129,7 +138,7 @@ function EarthGlobe({ markers, onLocationSelect, activity, preferences, mapMode 
       {/* Earth Globe */}
       <mesh ref={meshRef} onClick={handleGlobeClick}>
         <sphereGeometry args={[2, 64, 32]} />
-        <meshStandardMaterial map={earthTexture} transparent opacity={0.9} />
+        {earthTexture && <meshStandardMaterial map={earthTexture} transparent opacity={0.9} />}
       </mesh>
 
       {/* Weather Markers */}
