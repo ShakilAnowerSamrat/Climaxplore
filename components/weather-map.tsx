@@ -189,6 +189,7 @@ const WorldMapSVG = () => (
 )
 
 export function WeatherMap({ onLocationSelect, currentLocation, activity, preferences }: WeatherMapProps) {
+  const [isMounted, setIsMounted] = useState(false)
   const [markers, setMarkers] = useState<MapMarker[]>([])
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null)
   const [mapCenter, setMapCenter] = useState({ lat: 40.7128, lon: -74.006 }) // Default to NYC
@@ -203,6 +204,7 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
 
   // Initialize map with current location
   useEffect(() => {
+    setIsMounted(true)
     if (currentLocation) {
       setMapCenter({ lat: currentLocation.lat, lon: currentLocation.lon })
       const marker: MapMarker = {
@@ -293,22 +295,30 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
   }
 
   const getCurrentLocationWeather = () => {
-    if (!navigator.geolocation) return
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      console.error("[v0] Geolocation is not available")
+      return
+    }
 
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords
-      setMapCenter({ lat: latitude, lon: longitude })
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords
+        setMapCenter({ lat: latitude, lon: longitude })
 
-      const marker: MapMarker = {
-        lat: latitude,
-        lon: longitude,
-        name: "Current Location",
-      }
+        const marker: MapMarker = {
+          lat: latitude,
+          lon: longitude,
+          name: "Current Location",
+        }
 
-      setMarkers([marker])
-      await loadWeatherForMarker(marker)
-      onLocationSelect(latitude, longitude, "Current Location")
-    })
+        setMarkers([marker])
+        await loadWeatherForMarker(marker)
+        onLocationSelect(latitude, longitude, "Current Location")
+      },
+      (error) => {
+        console.error("[v0] Geolocation error:", error)
+      },
+    )
   }
 
   const getRiskColor = (risk?: string) => {
@@ -367,6 +377,14 @@ export function WeatherMap({ onLocationSelect, currentLocation, activity, prefer
       default:
         return <Cloud className="h-4 w-4" />
     }
+  }
+
+  if (!isMounted) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    )
   }
 
   return (
