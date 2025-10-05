@@ -476,7 +476,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact & Support
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/ShakilAnowerSamrat/Climaxplore/issues)
-- **Email**: [Your contact email]
+- **Email**: samrat@softsasi.com
+- **Phone**: +8801953395337
 - **Website**: [climaxplore.vercel.app](https://climaxplore.vercel.app)
 
 ---
