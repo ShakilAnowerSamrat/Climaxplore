@@ -481,7 +481,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Website**: [climaxplore.vercel.app](https://climaxplore.vercel.app)
 
 ---
-
+ 
 ## 🌟 Star History
 
 If you find Climaxplore useful, please consider giving it a star on GitHub! ⭐
