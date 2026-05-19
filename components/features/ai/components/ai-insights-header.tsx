@@ -14,16 +14,15 @@ export function AIInsightsHeader({ isLoading, onRefresh }: AIInsightsHeaderProps
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
         <Brain className="h-5 w-5 text-cyan-400" />
-        <h3 className="text-lg font-semibold dark:text-white bg-primary text-primary">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
           AI Weather Intelligence
         </h3>
         <Badge
           variant="outline"
-          className=" *:border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800
-          "
+          className="*:border-slate-300 dark:border-slate-600 text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800"
         >
-          <Zap className="h-3 w-3 mr-1" />
-          Powered by Gemini
+          <Zap className="h-3 w-3 mr-1 text-amber-500 fill-amber-500" />
+          Powered by ARIA AI
         </Badge>
       </div>
       <Button
