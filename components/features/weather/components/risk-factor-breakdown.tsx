@@ -3,12 +3,27 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { CheckCircle2, AlertTriangle, XCircle } from "lucide-react"
 import type { EnhancedRiskAssessment, ActivityType } from "@/lib/risk-assessment"
 import { getFactorColor, getFactorIcon } from "../utils/weather-helpers"
 
 interface RiskFactorBreakdownProps {
   riskAssessment: EnhancedRiskAssessment
   activity: ActivityType
+}
+
+function RenderFactorIcon({ status }: { status: string }) {
+  const iconName = getFactorIcon(status)
+  switch (iconName) {
+    case 'check-circle':
+      return <CheckCircle2 className="h-4 w-4 text-emerald-500 fill-emerald-500/10" />
+    case 'alert-triangle':
+      return <AlertTriangle className="h-4 w-4 text-amber-500 fill-amber-500/10" />
+    case 'x-circle':
+      return <XCircle className="h-4 w-4 text-rose-500 fill-rose-500/10" />
+    default:
+      return <AlertTriangle className="h-4 w-4 text-amber-500" />
+  }
 }
 
 export function RiskFactorBreakdown({ riskAssessment, activity }: RiskFactorBreakdownProps) {
@@ -23,7 +38,7 @@ export function RiskFactorBreakdown({ riskAssessment, activity }: RiskFactorBrea
           <div key={factor} className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {getFactorIcon(data.status)}
+                <RenderFactorIcon status={data.status} />
                 <span className="text-sm font-medium capitalize">{factor}</span>
               </div>
               <Badge variant="outline" className={getFactorColor(data.status)}>

@@ -381,28 +381,27 @@ export function CurrentWeatherOverview({
         )}
       </CardContent>
 
-      <CardFooter className="flex flex-col items-start gap-1 text-xs text-muted-foreground border-t pt-4 pb-16">
-        {/* {hasNasaData ? (
+      <CardFooter className="flex flex-col items-start gap-2 text-xs text-muted-foreground border-t pt-4 pb-4">
+        {hasNasaData ? (
           <>
-            <div className="flex items-center gap-1">
-              <Satellite className="h-3 w-3" />
+            <div className="flex items-center gap-1.5">
+              <Satellite className="h-3.5 w-3.5 text-primary" />
               <span>
-                NASA POWER API - 20-year historical average for{' '}
+                NASA POWER API — 20-year historical average for{' '}
                 {format(selectedDate, 'MMMM dd')}
               </span>
             </div>
-            <div className="flex items-center gap-1">
-              <Cloud className="h-3 w-3" />
-              <span>Live conditions from OpenWeather</span>
+            <div className="flex items-center gap-1.5">
+              <Cloud className="h-3.5 w-3.5 text-slate-400" />
+              <span>Live meteorology from OpenWeather API</span>
             </div>
           </>
         ) : (
-          <div className="flex items-center gap-1">
-            <Cloud className="h-3 w-3" />
-            <span>Current conditions from OpenWeather</span>
+          <div className="flex items-center gap-1.5">
+            <Cloud className="h-3.5 w-3.5 text-slate-400" />
+            <span>Current conditions from OpenWeather API</span>
           </div>
-        )} */}
-
+        )}
       </CardFooter>
     </Card>
   );

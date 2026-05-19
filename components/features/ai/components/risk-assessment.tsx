@@ -14,10 +14,10 @@ export function RiskAssessment({ insights, getSeverityColor }: RiskAssessmentPro
   if (insights.riskFactors.length === 0) return null
 
   return (
-    <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-orange-500/30 dark:border-orange-500/30 shadow-lg backdrop-blur-sm">
-      <CardHeader className="pb-3 bg-gradient-to-r from-orange-500/20 to-red-500/20 border-b border-orange-500/20">
-        <CardTitle className="text-orange-400 dark:text-orange-300 flex items-center gap-2 text-base">
-          <AlertTriangle className="h-5 w-5" />
+    <Card className="bg-white dark:bg-slate-900/80 border border-amber-200 dark:border-amber-900/40 shadow-sm backdrop-blur-sm">
+      <CardHeader className="pb-3 bg-amber-50/50 dark:bg-amber-950/20 border-b border-amber-100 dark:border-amber-900/20">
+        <CardTitle className="text-amber-800 dark:text-amber-400 flex items-center gap-2 text-base font-semibold">
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
           Risk Assessment
         </CardTitle>
       </CardHeader>
@@ -26,14 +26,14 @@ export function RiskAssessment({ insights, getSeverityColor }: RiskAssessmentPro
           {insights.riskFactors.map((risk, index) => (
             <div
               key={index}
-              className="flex items-start gap-4 p-4 rounded-lg bg-slate-800/50 dark:bg-slate-800/50 border border-slate-700/50 dark:border-slate-700/50"
+              className="flex items-start gap-4 p-4 rounded-lg bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100 dark:border-slate-800/50"
             >
               <Badge className={`${getSeverityColor(risk.severity)} font-medium px-3 py-1`}>
                 {risk.severity}
               </Badge>
               <div className="flex-1">
-                <h4 className="font-semibold text-slate-100 dark:text-slate-200 mb-2">{risk.factor}</h4>
-                <p className="text-slate-300 dark:text-slate-300 leading-relaxed">{risk.explanation}</p>
+                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">{risk.factor}</h4>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">{risk.explanation}</p>
               </div>
             </div>
           ))}
