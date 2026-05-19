@@ -14,68 +14,21 @@ export function WeatherIntelligenceSummary({
   lastUpdated,
 }: WeatherIntelligenceSummaryProps) {
   return (
-    <Card
-      className="
-      bg-white/80
-      dark:bg-slate-900/70
-      border
-      border-cyan-500/20
-      dark:border-cyan-500/30
-      shadow-md
-      backdrop-blur-sm
-    "
-    >
-      <CardHeader
-        className="
-        pb-3
-        bg-gradient-to-r
-        from-cyan-100/40
-        to-blue-100/30
-        dark:from-cyan-500/20
-        dark:to-blue-500/20
-        border-b
-        border-cyan-200/40
-        dark:border-cyan-500/20
-      "
-      >
-        <CardTitle
-          className="
-          flex items-center gap-2
-          text-cyan-700
-          dark:text-cyan-300
-          font-semibold
-          text-base
-        "
-        >
-          <TrendingUp className="h-5 w-5" />
+    <Card className="bg-white/60 dark:bg-[#0E0F12]/60 border border-slate-200/50 dark:border-slate-800/40 shadow-sm backdrop-blur-md rounded-xl">
+      <CardHeader className="pb-3 border-b border-slate-200/10 dark:border-slate-800/40">
+        <CardTitle className="flex items-center gap-2 text-slate-800 dark:text-slate-100 text-sm font-bold uppercase tracking-wider">
+          <TrendingUp className="h-4.5 w-4.5 text-slate-650 dark:text-slate-350" />
           Weather Intelligence Summary
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-6">
-        <p
-          className="
-          text-slate-700
-          dark:text-slate-200
-          leading-relaxed
-          text-base
-        "
-        >
+      <CardContent className="p-4 sm:p-6">
+        <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">
           {insights.summary}
         </p>
 
         {lastUpdated && (
-          <p
-            className="
-            text-xs
-            text-slate-500
-            dark:text-slate-400
-            mt-3 pt-3
-            border-t
-            border-slate-200/60
-            dark:border-slate-700/50
-          "
-          >
+          <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 mt-4 pt-3 border-t border-slate-200/50 dark:border-slate-800/40 uppercase tracking-wider">
             Last updated: {lastUpdated.toLocaleString()}
           </p>
         )}

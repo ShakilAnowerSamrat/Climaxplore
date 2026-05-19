@@ -24,44 +24,46 @@ export function ChatMessages({ messages, isLoading, scrollAreaRef }: ChatMessage
             >
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.role === "user" ? "bg-blue-600" : "bg-gradient-to-br from-cyan-500 to-emerald-500"
+                  message.role === "user" 
+                    ? "bg-slate-900 dark:bg-slate-100" 
+                    : "bg-slate-50 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-800/40"
                 }`}
               >
                 {message.role === "user" ? (
-                  <User className="h-4 w-4 text-white" />
+                  <User className="h-4 w-4 text-white dark:text-slate-950" />
                 ) : (
-                  <Bot className="h-4 w-4 text-white" />
+                  <Bot className="h-4 w-4 text-slate-700 dark:text-slate-200" />
                 )}
               </div>
               <div
-                className={`rounded-lg p-3 min-w-0 flex-1 ${
+                className={`rounded-xl p-3.5 min-w-0 flex-1 ${
                   message.role === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-slate-800 text-slate-100 border border-slate-700"
+                    ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-950 font-medium"
+                    : "bg-slate-50/60 dark:bg-slate-900/60 text-slate-800 dark:text-slate-200 border border-slate-200/30 dark:border-slate-850/40"
                 }`}
               >
-                <p className="text-sm leading-relaxed break-words hyphens-auto overflow-wrap-anywhere word-break-break-word">
+                <p className="text-xs sm:text-sm leading-relaxed break-words hyphens-auto overflow-wrap-anywhere word-break-break-word">
                   {message.content}
                 </p>
-                <p className="text-xs opacity-70 mt-1">{message.timestamp.toLocaleTimeString()}</p>
+                <p className="text-[10px] opacity-50 mt-1.5 font-mono">{message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
               </div>
             </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex gap-3 justify-start">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-emerald-500 flex items-center justify-center">
-              <Bot className="h-4 w-4 text-white" />
+            <div className="w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-800/40 flex items-center justify-center">
+              <Bot className="h-4 w-4 text-slate-750 dark:text-slate-250" />
             </div>
-            <div className="bg-slate-800 border border-slate-700 rounded-lg p-3">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" />
+            <div className="bg-slate-50/60 dark:bg-slate-900/60 border border-slate-200/30 dark:border-slate-850/40 rounded-xl p-3">
+              <div className="flex gap-1.5 py-1 px-0.5">
+                <div className="w-1.5 h-1.5 bg-slate-400 dark:bg-slate-600 rounded-full animate-bounce" />
                 <div
-                  className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-slate-450 dark:bg-slate-550 rounded-full animate-bounce"
                   style={{ animationDelay: "0.1s" }}
                 />
                 <div
-                  className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"
+                  className="w-1.5 h-1.5 bg-slate-500 dark:bg-slate-500 rounded-full animate-bounce"
                   style={{ animationDelay: "0.2s" }}
                 />
               </div>

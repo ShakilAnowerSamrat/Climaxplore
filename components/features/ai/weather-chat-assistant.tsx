@@ -36,7 +36,7 @@ export default function WeatherChatAssistant({ weatherContext }: WeatherChatAssi
   }
 
   return (
-    <Card className="h-[600px] flex flex-col bg-slate-900/50 border-cyan-500/20 overflow-hidden">
+    <Card className="h-[600px] flex flex-col bg-white/60 dark:bg-[#0E0F12]/60 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/40 shadow-sm overflow-hidden rounded-xl">
       <ChatHeader />
       <CardContent className="flex-1 flex flex-col gap-4 p-4 min-h-0 overflow-hidden">
         <QuickQuestions questions={quickQuestions} onQuestionClick={sendMessage} isLoading={isLoading} />

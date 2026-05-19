@@ -18,7 +18,7 @@ export function QuickQuestions({ questions, onQuestionClick, isLoading }: QuickQ
           size="sm"
           onClick={() => onQuestionClick(question)}
           disabled={isLoading}
-          className="text-xs border-slate-600 hover:border-cyan-500/50 hover:bg-cyan-500/10"
+          className="text-xs bg-slate-50/50 dark:bg-slate-900/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/50 dark:border-slate-800/40 transition-colors duration-200 rounded-full py-1 px-3 shadow-none h-auto font-normal"
         >
           {question}
         </Button>
