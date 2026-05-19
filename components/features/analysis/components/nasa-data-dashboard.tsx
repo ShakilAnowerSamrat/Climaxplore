@@ -467,7 +467,7 @@ function generateWeatherWarnings(data: any): Array<{
   if ((data.precipitation?.probability || 0) > 70) {
     warnings.push({
       severity: 'high',
-      title: '⚠️ High Rain Probability',
+      title: 'High Rain Probability Warning',
       message: `${data.precipitation.probability}% chance of rain based on ${data.period?.years_analyzed} years of data. Plan indoor alternatives.`,
     });
   }
@@ -476,7 +476,7 @@ function generateWeatherWarnings(data: any): Array<{
   if ((data.extreme_events?.heat_waves?.probability || 0) > 30) {
     warnings.push({
       severity: 'high',
-      title: '🔥 Heat Wave Risk',
+      title: 'Extreme Heat Wave Risk Alert',
       message: `${data.extreme_events.heat_waves.probability}% probability of extreme heat. Stay hydrated and avoid prolonged sun exposure.`,
     });
   }
@@ -485,7 +485,7 @@ function generateWeatherWarnings(data: any): Array<{
   if ((data.extreme_events?.cold_snaps?.probability || 0) > 30) {
     warnings.push({
       severity: 'medium',
-      title: '❄️ Cold Weather Alert',
+      title: 'Unusual Cold Snap Warning',
       message: `${data.extreme_events.cold_snaps.probability}% probability of unusually cold temperatures. Dress warmly.`,
     });
   }
@@ -494,7 +494,7 @@ function generateWeatherWarnings(data: any): Array<{
   if ((data.extreme_events?.heavy_rain?.probability || 0) > 20) {
     warnings.push({
       severity: 'medium',
-      title: '🌧️ Heavy Rainfall Possible',
+      title: 'Heavy Rainfall Risk Alert',
       message: `${data.extreme_events.heavy_rain.probability}% chance of heavy rainfall. Be prepared for potential flooding.`,
     });
   }
@@ -503,7 +503,7 @@ function generateWeatherWarnings(data: any): Array<{
   if (data.metadata?.data_quality === 'partial') {
     warnings.push({
       severity: 'low',
-      title: 'ℹ️ Partial Data',
+      title: 'Partial Data Model In Use',
       message: `Some NASA data sources were unavailable. Using estimated fallback data: ${data.metadata.warnings?.join(
         ', '
       )}`,

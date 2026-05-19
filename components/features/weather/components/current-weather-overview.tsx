@@ -198,182 +198,161 @@ export function CurrentWeatherOverview({
   const nasaBadgeText = getNasaBadgeText();
 
   return (
-    <Card className="lg:col-span-2">
-      <CardHeader>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4" />
+    <Card className="lg:col-span-2 bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/40 shadow-sm backdrop-blur-sm overflow-hidden">
+      <CardHeader className="border-b border-slate-100 dark:border-slate-800/40 pb-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-400 uppercase tracking-wider">
+            <Calendar className="h-3.5 w-3.5 text-slate-400" />
             <span>{format(selectedDate, 'EEEE, MMMM dd, yyyy')}</span>
           </div>
           {hasNasaData && nasaBadgeText && (
-            <Badge variant="secondary" className="gap-1">
-              <Satellite className="h-3 w-3" />
+            <Badge variant="secondary" className="gap-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-mono text-[9px] uppercase tracking-wider rounded border border-slate-200 dark:border-slate-700">
+              <Satellite className="h-3 w-3 text-cyan-500" />
               {nasaBadgeText}
             </Badge>
           )}
           {!hasNasaData && (
-            <Badge variant="outline" className="gap-1 text-muted-foreground">
-              OpenWeather Data
+            <Badge variant="outline" className="gap-1 border-slate-200 dark:border-slate-800 text-slate-400 font-mono text-[9px] uppercase tracking-wider rounded">
+              OpenWeather Real-Time
             </Badge>
           )}
         </div>
 
-        {/* Info: Dashboard API shows historical patterns for future predictions
-        // {hasNasaData && nasaTempData?.source === 'dashboard' && (
-        //   <div className="mt-2 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-        //     <p className="text-sm text-blue-700 dark:text-blue-400">
-        //       📊 Showing probability analysis based on{' '}
-        //       {nasaData?.period?.years_analyzed || 10} years of satellite
-        //       observations for this date.
-        //     </p>
-        //   </div>
-        // )} */}
-
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {getWeatherIcon(weather.current.weather[0]?.main)}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="text-slate-900 dark:text-white">
+              {getWeatherIcon(weather.current.weather[0]?.main)}
+            </div>
             <div>
-              {/* PRIMARY: NASA historical average or OpenWeather current */}
               <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold">
+                <span className="text-5xl sm:text-6xl font-semibold tracking-tighter leading-none text-slate-900 dark:text-white">
                   {Math.round(primaryTemp)}°C
                 </span>
-                {hasNasaData && <Satellite className="h-5 w-5 text-primary" />}
+                {hasNasaData && <Satellite className="h-4 w-4 text-cyan-500" />}
               </div>
 
-              {/* Temperature range from NASA */}
               {tempRange && (
-                <div className="text-sm text-muted-foreground mt-1">
-                  Range: {Math.round(tempRange.min)}°C -{' '}
-                  {Math.round(tempRange.max)}°C
+                <div className="text-xs font-mono text-slate-400 mt-1 uppercase tracking-tight">
+                  Range: {Math.round(tempRange.min)}°C — {Math.round(tempRange.max)}°C
                 </div>
               )}
 
-              {/* Current conditions from OpenWeather (if different from NASA) */}
-              {hasNasaData &&
-                Math.abs(weather.current.temp - primaryTemp) > 2 && (
-                  <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                    <span>
-                      Now: {Math.round(weather.current.temp)}°C (feels{' '}
-                      {Math.round(weather.current.feels_like)}°C)
-                    </span>
-                  </div>
-                )}
+              {hasNasaData && Math.abs(weather.current.temp - primaryTemp) > 2 && (
+                <div className="text-xs text-slate-400 mt-1 font-mono uppercase tracking-tight">
+                  Now: {Math.round(weather.current.temp)}°C (feels {Math.round(weather.current.feels_like)}°C)
+                </div>
+              )}
 
               {!hasNasaData && (
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs text-slate-400 mt-1 font-mono uppercase tracking-tight">
                   Feels like {Math.round(weather.current.feels_like)}°C
                 </div>
               )}
             </div>
           </div>
+
           <Badge
             className={`${getRiskColor(
               riskAssessment.overall
-            )} text-lg px-4 py-2`}
+            )} text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded`}
           >
-            {riskAssessment.overall.toUpperCase()} RISK
+            {riskAssessment.overall} RISK
           </Badge>
-        </CardTitle>
+        </div>
 
-        <CardDescription className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-3 font-medium">
           <span>{locationName}</span>
           <span>•</span>
           <span className="capitalize">
             {weather.current.weather[0]?.description}
           </span>
-        </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Activity Suitability Score */}
-        <div className="text-center p-6 bg-muted/50 rounded-lg">
-          <div className="text-4xl font-bold text-primary mb-2">
-            {riskAssessment.score}/100
+
+      <CardContent className="p-6 space-y-6">
+        {/* Activity Suitability Score Block */}
+        <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-slate-50/50 dark:bg-slate-800/20 border border-slate-100 dark:border-slate-800/40 rounded-md">
+          <div className="flex flex-col items-center justify-center text-center">
+            <div className="text-4xl font-mono font-bold tracking-tight text-slate-900 dark:text-white">
+              {riskAssessment.score}%
+            </div>
+            <div className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mt-0.5">
+              SUITABILITY
+            </div>
           </div>
-          <div className="text-sm text-muted-foreground mb-3">
-            Activity Suitability Score for {activity.name}
+          <div className="flex-1 w-full space-y-2">
+            <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <span>Parade Suitability Score ({activity.name})</span>
+              <span>{riskAssessment.score} / 100</span>
+            </div>
+            <Progress value={riskAssessment.score} className="w-full h-2 bg-slate-200/50 dark:bg-slate-800" />
           </div>
-          <Progress value={riskAssessment.score} className="w-full h-3" />
         </div>
 
-        {/* Weather Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {/* NASA Rain Probability (if available) */}
-          {rainProb !== undefined && (
-            <div className="text-center p-3 bg-primary/5 border border-primary/20 rounded-lg">
-              <div className="flex items-center justify-center gap-1 mb-2">
-                <Droplets className="h-5 w-5 text-primary" />
-                <Satellite className="h-3 w-3 text-primary" />
-              </div>
-              <div className="font-semibold">{rainProb}%</div>
-              <div className="text-xs text-muted-foreground">Rain Chance</div>
+        {/* Modular divide-grid instead of double card boxes */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-slate-800/40 border-t border-b border-slate-100 dark:border-slate-800/40 py-6">
+          {rainProb !== undefined ? (
+            <div className="flex flex-col items-center justify-center text-center px-4">
+              <Droplets className="h-4 w-4 text-cyan-500 mb-1.5" />
+              <div className="font-mono text-base font-bold text-slate-900 dark:text-white">{rainProb}%</div>
+              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">RAIN PROBABILITY</div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center px-4">
+              <Cloud className="h-4 w-4 text-slate-400 mb-1.5" />
+              <div className="font-mono text-base font-bold text-slate-900 dark:text-white">N/A</div>
+              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">RAIN PROBABILITY</div>
             </div>
           )}
 
-          {/* OpenWeather live metrics */}
-          <div className="text-center p-3 bg-card border rounded-lg">
-            <div className="flex items-center justify-center gap-1 mb-2">
-              <Wind className="h-5 w-5 text-muted-foreground" />
-              <Cloud className="h-3 w-3 text-muted-foreground" />
-            </div>
-            <div className="font-semibold">
-              {weather.current.wind_speed} m/s
-            </div>
-            <div className="text-xs text-muted-foreground">Wind (Live)</div>
+          <div className="flex flex-col items-center justify-center text-center px-4 pt-4 md:pt-0">
+            <Wind className="h-4 w-4 text-slate-400 mb-1.5" />
+            <div className="font-mono text-base font-bold text-slate-900 dark:text-white">{weather.current.wind_speed} m/s</div>
+            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">WIND VELOCITY</div>
           </div>
 
-          <div className="text-center p-3 bg-card border rounded-lg">
-            <div className="flex items-center justify-center gap-1 mb-2">
-              <Droplets className="h-5 w-5 text-muted-foreground" />
-              <Cloud className="h-3 w-3 text-muted-foreground" />
-            </div>
-            <div className="font-semibold">{weather.current.humidity}%</div>
-            <div className="text-xs text-muted-foreground">Humidity (Live)</div>
+          <div className="flex flex-col items-center justify-center text-center px-4 pt-4 md:pt-0">
+            <Droplets className="h-4 w-4 text-slate-400 mb-1.5" />
+            <div className="font-mono text-base font-bold text-slate-900 dark:text-white">{weather.current.humidity}%</div>
+            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">HUMIDITY</div>
           </div>
 
-          <div className="text-center p-3 bg-card border rounded-lg">
-            <div className="flex items-center justify-center gap-1 mb-2">
-              <Eye className="h-5 w-5 text-muted-foreground" />
-              <Cloud className="h-3 w-3 text-muted-foreground" />
-            </div>
-            <div className="font-semibold">
-              {Math.round((weather.current.visibility || 10000) / 1000)}km
-            </div>
-            <div className="text-xs text-muted-foreground">
-              Visibility (Live)
-            </div>
+          <div className="flex flex-col items-center justify-center text-center px-4 pt-4 md:pt-0">
+            <Eye className="h-4 w-4 text-slate-400 mb-1.5" />
+            <div className="font-mono text-base font-bold text-slate-900 dark:text-white">{Math.round((weather.current.visibility || 10000) / 1000)} km</div>
+            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">VISIBILITY</div>
           </div>
         </div>
 
-        {/* NASA Extreme Events (if available) */}
+        {/* NASA Historical Extreme Events */}
         {nasaSelectedDate?.extreme_events && (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {nasaSelectedDate.extreme_events.hot_hours_percentage > 0 && (
-              <div className="p-3 bg-orange-500/10 border border-orange-500/20 rounded-lg">
+              <div className="p-4 bg-amber-50/30 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/20 rounded-md">
                 <div className="flex items-center gap-2 mb-1">
-                  <Thermometer className="h-4 w-4 text-orange-600" />
-                  <Satellite className="h-3 w-3 text-orange-600" />
+                  <Thermometer className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+                  <Satellite className="h-3 w-3 text-amber-500" />
                 </div>
-                <div className="font-semibold text-orange-700">
-                  {nasaSelectedDate.extreme_events.hot_hours_percentage}% of day
+                <div className="font-mono text-sm font-bold text-amber-800 dark:text-amber-400">
+                  {nasaSelectedDate.extreme_events.hot_hours_percentage}% of observed day
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  Hot conditions (30°C+)
+                <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">
+                  High Heat exposure (30°C+)
                 </div>
               </div>
             )}
 
             {nasaSelectedDate.extreme_events.heat_wave_percentage > 0 && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <div className="p-4 bg-rose-50/30 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/20 rounded-md">
                 <div className="flex items-center gap-2 mb-1">
-                  <Thermometer className="h-4 w-4 text-red-600" />
-                  <Satellite className="h-3 w-3 text-red-600" />
+                  <Thermometer className="h-4 w-4 text-rose-600 dark:text-rose-500" />
+                  <Satellite className="h-3 w-3 text-rose-500" />
                 </div>
-                <div className="font-semibold text-red-700">
-                  {nasaSelectedDate.extreme_events.heat_wave_percentage}% of day
+                <div className="font-mono text-sm font-bold text-rose-800 dark:text-rose-400">
+                  {nasaSelectedDate.extreme_events.heat_wave_percentage}% of observed day
                 </div>
-                <div className="text-xs text-muted-foreground">
-                  Heat wave risk (32°C+)
+                <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">
+                  Heat wave warning threshold (32°C+)
                 </div>
               </div>
             )}
@@ -381,23 +360,23 @@ export function CurrentWeatherOverview({
         )}
       </CardContent>
 
-      <CardFooter className="flex flex-col items-start gap-2 text-xs text-muted-foreground border-t pt-4 pb-4">
+      <CardFooter className="flex flex-col items-start gap-2 text-[10px] font-mono text-slate-400 uppercase tracking-wider border-t border-slate-100 dark:border-slate-800/40 p-6 bg-slate-50/30 dark:bg-slate-900/20">
         {hasNasaData ? (
           <>
-            <div className="flex items-center gap-1.5">
-              <Satellite className="h-3.5 w-3.5 text-primary" />
+            <div className="flex items-center gap-2">
+              <Satellite className="h-3.5 w-3.5 text-cyan-500" />
               <span>
                 NASA POWER API — 20-year historical average for{' '}
                 {format(selectedDate, 'MMMM dd')}
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <Cloud className="h-3.5 w-3.5 text-slate-400" />
               <span>Live meteorology from OpenWeather API</span>
             </div>
           </>
         ) : (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <Cloud className="h-3.5 w-3.5 text-slate-400" />
             <span>Current conditions from OpenWeather API</span>
           </div>
