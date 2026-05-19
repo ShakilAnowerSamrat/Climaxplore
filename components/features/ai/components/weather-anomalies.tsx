@@ -15,17 +15,17 @@ export function WeatherAnomalies({ anomalies, getSeverityColor }: WeatherAnomali
   if (anomalies.anomalies.length === 0) return null
 
   return (
-    <Card className="bg-white dark:bg-slate-900/80 border border-rose-200 dark:border-rose-900/40 shadow-sm backdrop-blur-sm">
-      <CardHeader className="pb-3 bg-rose-50/50 dark:bg-rose-950/20 border-b border-rose-100 dark:border-rose-900/20">
-        <CardTitle className="text-rose-800 dark:text-rose-400 flex items-center gap-2 text-base font-semibold">
-          <AlertTriangle className="h-5 w-5 text-rose-600 dark:text-rose-500" />
+    <Card className="bg-white/60 dark:bg-[#0E0F12]/60 border border-rose-200/60 dark:border-rose-900/30 shadow-sm backdrop-blur-md rounded-xl">
+      <CardHeader className="pb-3 border-b border-rose-200/20 dark:border-rose-900/20">
+        <CardTitle className="text-rose-800 dark:text-rose-450 flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+          <AlertTriangle className="h-4.5 w-4.5 text-rose-600 dark:text-rose-500 animate-pulse" />
           Weather Anomalies Detected
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
-        <Alert className="mb-4 border-rose-200 dark:border-rose-900/40 bg-rose-50/50 dark:bg-rose-950/20">
+      <CardContent className="p-4 sm:p-6">
+        <Alert className="mb-4 border-rose-200/60 dark:border-rose-900/30 bg-rose-50/50 dark:bg-rose-950/20 rounded-xl">
           <AlertTriangle className="h-4 w-4 text-rose-600 dark:text-rose-400" />
-          <AlertDescription className="text-rose-800 dark:text-rose-300 text-sm font-medium">
+          <AlertDescription className="text-rose-800 dark:text-rose-300 text-xs sm:text-sm font-medium">
             Unusual weather patterns detected. Review recommendations carefully.
           </AlertDescription>
         </Alert>

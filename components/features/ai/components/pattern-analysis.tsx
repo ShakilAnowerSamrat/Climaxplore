@@ -11,12 +11,12 @@ export function PatternAnalysis({ insights }: PatternAnalysisProps) {
   if (!insights.patterns) return null
 
   return (
-    <Card className="bg-slate-900/80 dark:bg-slate-800/50 border-purple-500/30 dark:border-purple-500/30 shadow-lg backdrop-blur-sm">
-      <CardHeader className="pb-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-b border-purple-500/30">
-        <CardTitle className="text-purple-400 dark:text-purple-300 text-base">Pattern Analysis</CardTitle>
+    <Card className="bg-white/60 dark:bg-[#0E0F12]/60 border border-slate-200/50 dark:border-slate-800/40 shadow-sm backdrop-blur-md rounded-xl">
+      <CardHeader className="pb-3 border-b border-slate-200/10 dark:border-slate-800/40">
+        <CardTitle className="text-slate-800 dark:text-slate-100 text-sm font-bold uppercase tracking-wider">Pattern Analysis</CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
-        <p className="text-slate-100 dark:text-slate-200 leading-relaxed">{insights.patterns}</p>
+      <CardContent className="p-4 sm:p-6">
+        <p className="text-slate-700 dark:text-slate-350 text-xs sm:text-sm leading-relaxed">{insights.patterns}</p>
       </CardContent>
     </Card>
   )

@@ -14,14 +14,14 @@ export function RiskAssessment({ insights, getSeverityColor }: RiskAssessmentPro
   if (insights.riskFactors.length === 0) return null
 
   return (
-    <Card className="bg-white dark:bg-slate-900/80 border border-amber-200 dark:border-amber-900/40 shadow-sm backdrop-blur-sm">
-      <CardHeader className="pb-3 bg-amber-50/50 dark:bg-amber-950/20 border-b border-amber-100 dark:border-amber-900/20">
-        <CardTitle className="text-amber-800 dark:text-amber-400 flex items-center gap-2 text-base font-semibold">
-          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
+    <Card className="bg-white/60 dark:bg-[#0E0F12]/60 border border-amber-200/60 dark:border-amber-900/30 shadow-sm backdrop-blur-md rounded-xl">
+      <CardHeader className="pb-3 border-b border-amber-200/20 dark:border-amber-900/20">
+        <CardTitle className="text-amber-800 dark:text-amber-450 flex items-center gap-2 text-sm font-bold uppercase tracking-wider">
+          <AlertTriangle className="h-4.5 w-4.5 text-amber-600 dark:text-amber-500" />
           Risk Assessment
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="p-4 sm:p-6">
         <div className="space-y-4">
           {insights.riskFactors.map((risk, index) => (
             <div
