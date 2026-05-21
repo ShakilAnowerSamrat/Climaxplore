@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@/components/core/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
@@ -27,8 +28,10 @@ export default function RootLayout({
         className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}
         suppressHydrationWarning
       >
-        {children}
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
