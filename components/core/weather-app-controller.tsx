@@ -185,6 +185,32 @@ export function WeatherAppController() {
             />
           </TabsContent>
         </Tabs>
+
+        {/* 🌍 Premium Footer */}
+        <footer className="mt-20 pt-8 pb-6 border-t border-slate-200 dark:border-slate-800/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
+          <div className="flex flex-col gap-1 text-center sm:text-left">
+            <p>
+              Built for the{' '}
+              <span className="font-semibold text-slate-800 dark:text-slate-200">
+                NASA Space Apps Challenge 2025
+              </span>
+            </p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500">
+              An open source and open science platform designed to protect and empower communities through climate intelligence
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span>Crafted by</span>
+            <a
+              href="https://www.softsasi.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-800 dark:text-slate-200 transition-all font-semibold hover:scale-105 active:scale-95 duration-100 uppercase tracking-wider font-mono cursor-pointer"
+            >
+              Softsasi
+            </a>
+          </div>
+        </footer>
       </div>
     </div>
   );
